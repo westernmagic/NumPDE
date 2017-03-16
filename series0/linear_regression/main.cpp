@@ -19,16 +19,24 @@ int main(int argc, char **argv){
 
   // TODO: Initialize Eigen Matrix A
   Eigen::MatrixXd A(15,2);
-// (write your solution here)
+  //// NPDE_START_TEMPLATE
+  vector_t aux(15); aux.setOnes();
+  A << aux, X;
+  //// NPDE_END_TEMPLATE
 
   // Create LHS = A'*A
   Eigen::MatrixXd LHS = A.transpose()*A;
 
   // TODO: Create RHS = A'*Y
-// (write your solution here)
+  //// NPDE_START_TEMPLATE
+  vector_t RHS = A.transpose()*Y;
+  //// NPDE_END_TEMPLATE
 
   // TODO: Solve system and output coefficients b_0 and b_1
-// (write your solution here)
+  //// NPDE_START_TEMPLATE
+  Eigen::Vector2d sol = LHS.lu().solve(RHS);
+  std::cout << "b_0 = " << sol(0) << " and b_1 = " << sol(1)  << std::endl;
+  //// NPDE_END_TEMPLATE
 
   return 0;
 }

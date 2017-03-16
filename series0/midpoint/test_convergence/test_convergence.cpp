@@ -17,7 +17,33 @@ double f(double x) {
 
 
 int main(int, char**) {
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    const double a = 0.2;
+    const double b = 1.3;
+    double exact = (cos(M_PI*a) - cos(M_PI * b)) / M_PI;
+    
+    // We store the errors in this vector
+    std::vector<double> errors;
+
+    // We store the number of subintervals we have used here
+    std::vector<int> numberOfSubintervals;
+
+    for(int k = 4; k <= 11; k++) {
+        int n = 1 << k;
+
+        // Compute the midpoint rule here.
+        double In = midpoint_rule(a, b, n, f);
+        // Compute the correct error:
+        double error = fabs(In - exact);
+        errors.push_back(error);
+        numberOfSubintervals.push_back(n);
+    }
+    
+    // Write result to disk
+    writeToFile("series0_1_d_errors.txt", errors);
+    writeToFile("series0_1_d_numbers.txt", numberOfSubintervals);
+
+    //// NPDE_END_TEMPLATE
 
     return 0;
 }

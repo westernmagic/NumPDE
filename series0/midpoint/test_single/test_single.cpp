@@ -22,7 +22,9 @@ double f(double x) {
 int main(int, char**) {
     // TODO: Compute the proper approximation here:
     double In = 0; 
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    In = midpoint_rule(0.2, 1.3, 100, f);
+    //// NPDE_END_TEMPLATE
 
     // Set high precision for output, easier to see what is going on:
     std::cout << std::setprecision(std::numeric_limits<long double>::digits10 + 1);
