@@ -31,7 +31,56 @@ void createPorousMediaMatrix2D(SparseMatrix& A, FunctionPointer sigma, int N, do
 
     // Fill up triples
 
-// (write your solution here)
+    // (write your solution here)
+    A.setZero();
+    std::array<double, 5> ss;
+    auto s = [&ss](int i, int j) -> double {
+        if (i == 0 && j == 0) {
+            return ss[0];
+        } else if (i == -1 && j == 0) {
+            return ss[1];
+        } else if (i == 1 && j == 0) {
+            return ss[2];
+        } else if (i == 0 && j == -1 ) {
+            return ss[3];
+        } else if (i == 0 && j == 1) {
+            return ss[4];
+        } else {
+            throw std::runtime_error("s indices out of bounds.");
+        }
+    };
+
+    for (int i = 0; i < N*N; i++) {
+        int ii = i / N + 1;
+        int jj = i % N + 1;
+        ss = {
+            sigma( ii    * dx,  jj    * dx),
+            sigma((ii-1) * dx,  jj    * dx),
+            sigma((ii+1) * dx,  jj    * dx),
+            sigma( ii    * dx, (jj-1) * dx),
+            sigma( ii    * dx, (jj+1) * dx)
+        };
+
+        // u_{i,j}
+        triplets.push_back(Triplet(i, i, 4 * s(0,0)));
+        if (i % N != 0) { // u_{i,j-1}
+            triplets.push_back(Triplet(i, i-1,
+                -1/4.0 * (1 * s(0,-1) + 4 * s(0,0) - s(0,1)) ));
+        }
+        if (i % N != N - 1) { // u_{i,j+1}
+            triplets.push_back(Triplet(i, i+1,
+                -1/4.0 * (-1 * s(0,-1) + 4 * s(0,0) + s(0,1)) ));
+        }
+        if (i >= N) { // u_{i-1,j}
+            triplets.push_back(Triplet(i, i-N,
+                -1/4.0 * (-1 * s(-1,0) + 4 * s(0,0) + s(1,0)) ));
+        }
+        if (i < N*N - N) { // u_{i+1,j}
+            triplets.push_back(Triplet(i, i+N,
+                -1/4.0 * (1 * s(-1,0) + 4 * s(0,0) - s(1,0)) ));
+        }
+    }
+
     A.setFromTriplets(triplets.begin(), triplets.end());
 }
 //----------------poissonEnd----------------
@@ -67,7 +116,31 @@ Vector poissonSolve(FunctionPointer f, FunctionPointer sigma, int N) {
     double dx = 1.0 / (N + 1);
 
     // Compute A, rhs and u
-// (write your solution here)
+    // (write your solution here)
+    SparseMatrix A;
+    createPorousMediaMatrix2D(A, sigma, N, dx);
+
+    Vector rhs;
+    createRHS(rhs, f, N, dx);
+
+    Eigen::SparseLU<SparseMatrix> solver;
+    solver.compute(A);
+
+    if (solver.info() != Eigen::Success) {
+        throw std::runtime_error("Could not decompose the matrix.");
+    }
+
+    u.resize((N+2) * (N+2));
+    u.setZero();
+
+    Vector innerU = solver.solve(rhs);
+
+    for (int i = 1; i < N+1; i++) {
+        for (int j = 1; j < N+1; j++) {
+            u[i * (N+2) + j] = innerU[(i-1) * N + (j-1)];
+        }
+    }
+
     return u;
 }
 //----------------solveEnd----------------
@@ -81,15 +154,17 @@ double F(double x, double y) {
 //----------------convergenceBegin----------------
 //! Gives the exact solution at the point x,y
 double exactSolution(double x, double y) {
-// (write your solution here)
-return 0; //remove when implemented
+    // (write your solution here)
+    return sin(2 * M_PI * x) * sin(2 * M_PI * y);
+    //return 0; //remove when implemented
+    //return 1.0/ (4 * M_PI * M_PI) * sin(2*M_PI*x); // constant solution
 }
 
 
 
 void convergeStudy(FunctionPointer F, FunctionPointer sigma) {
     const int startK = 3;
-    const int endK = 9;
+    const int endK = 10;
 
 
     Vector errors(endK - startK);
@@ -97,7 +172,20 @@ void convergeStudy(FunctionPointer F, FunctionPointer sigma) {
     for (int k = startK; k < endK; ++k) {
         const int N = 1<<k; // 2^k
 
-// (write your solution here)
+    // (write your solution here)
+        resolutions[k - startK] = N;
+        Vector u;
+        u = poissonSolve(F, sigma, N);
+        double error = 0;
+        for (int i = 1; i < N + 2; i++) {
+            for (int j = 1; j < N + 2; j++) {
+                double e = abs(u[i * (N + 2) + j] - exactSolution(i / double(N + 2), j / double(N + 2)));
+                if (e > error) {
+                    error = e;
+                }
+            }
+        }
+        errors[k - startK] = error;
     }
 
     writeToFile("errors.txt", errors);
@@ -114,6 +202,7 @@ int main(int, char**) {
         return 1.0;
     };
     auto u = poissonSolve(F, sigmaCos, 500);
+    //auto u = poissonSolve(F, sigmaConstant, 500);
     writeToFile("u_fd.txt", u);
 
     convergeStudy(F, sigmaCos);

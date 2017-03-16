@@ -9,7 +9,7 @@ set(EXTERNAL_PROJECT_CMAKE_ARGS_PREFIX "-DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILE
 find_package(Eigen3)
 if(EIGEN3_VERSION VERSION_GREATER 3.2.7 OR EIGEN3_VERSION VERSION_EQUAL 3.2.7)
   message("Eigen version >= 3.2.7 is not supported. Downloading 3.2.7 instead.")
-  set(EIGEN3_FOUND FALSE)
+  set(EIGEN3_FOUND TRUE)
 endif()
 if (EIGEN3_FOUND)
 	include_directories(${EIGEN3_INCLUDE_DIR})

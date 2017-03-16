@@ -26,10 +26,16 @@ void createPoissonMatrix(SparseMatrix& A, int N) {
     std::vector<Triplet> triplets;
     triplets.reserve(N + 2 * N - 2);
     for (int i = 0; i < N; ++i) {
-	// This is the diagonal
+    // This is the diagonal
         triplets.push_back(Triplet(i, i, 2));
 
-// (write your solution here)
+    // (write your solution here)
+        if(i > 0) {
+            triplets.push_back(Triplet(i - 1, i, -1));
+        }
+        if(i < N-1) {
+            triplets.push_back(Triplet(i + 1, i, -1));
+        }
     }
 
 
@@ -49,7 +55,10 @@ void createPoissonMatrix(SparseMatrix& A, int N) {
 void createRHS(Vector& rhs, FunctionPointer f, int N, double dx) {
     rhs.resize(N);
     // Set RHS
-// (write your solution here)
+    // (write your solution here)
+    for (int i = 0; i < N ; i++) {
+        rhs[i] = dx * dx * f(i * dx);
+    }
 }
 //----------------RHSEnd----------------
 
@@ -68,14 +77,16 @@ void poissonSolve(Vector& u, FunctionPointer f, int N) {
 
     SparseMatrix A;
     // create the matrix
-// (write your solution here)
-    
+    // (write your solution here)
+    createPoissonMatrix(A, N);
     Vector rhs;
+
     // create RHS
-// (write your solution here)
+    // (write your solution here)
+    createRHS(rhs, f, N, dx);
 
     Eigen::SparseLU<SparseMatrix> solver;
-    
+
     solver.compute(A);
 
     if ( solver.info() !=  Eigen::Success) {
@@ -83,7 +94,10 @@ void poissonSolve(Vector& u, FunctionPointer f, int N) {
     }
 
     // Find u: ....
-// (write your solution here)
+    // (write your solution here)
+    u.resize(N);
+    u.setZero();
+    u = solver.solve(rhs);
 }
 
 
@@ -131,13 +145,24 @@ void poissonConvergence( std::vector<double>& errors,
                          std::vector<int>& resolutions) {
 
     const int startK = 2;
-    const int endK = 9;
+    const int endK = 13;
     errors.resize(endK - startK);
     resolutions.resize(errors.size());
     for (int k = startK; k < endK; ++k) {
         const int N = 1 << k - 1;
-	// compute the solution and the error
-// (write your solution here)
+    // compute the solution and the error
+    // (write your solution here)
+        resolutions[k - startK] = N;
+        Vector u;
+        poissonSolve(u, F, N);
+        double error = 0;
+        for (int i = 0; i < N; i++) {
+            double e = abs(u[i] - exact(i / double(N)));
+            if(e > error) {
+                error = e;
+            }
+        }
+        errors[k - startK] = error;
     }
 
 }
