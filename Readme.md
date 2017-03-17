@@ -5,6 +5,9 @@
 git clone --recursive https://github.com/westernmagic/NumPDE.git
 ```
 
+Then edit [Settings.cmake](Settings.cmake) appropiately.
+
+
 ## `master` branch
 Contains my solutions
 

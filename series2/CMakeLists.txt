@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.7)
-project ("NumPDE Series 2")
+project ("series2")
 
 enable_testing()
 include ("../common/cmake/Common.cmake")
