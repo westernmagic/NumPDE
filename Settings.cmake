@@ -1,2 +1,1 @@
-set (PROJECT_AUTHOR_SHORTNAME msudwoj)
-
+common/cmake/Settings.cmake

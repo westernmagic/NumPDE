@@ -11,7 +11,6 @@ set (CPACK_SOURCE_INSTALLED_DIRECTORIES
 	${CMAKE_SOURCE_DIR};/${CMAKE_PROJECT_NAME}
 	${PROJECT_ROOT_DIR}/common;/common
 	${PROJECT_ROOT_DIR}/external/libigl-example-project/cmake;/common/cmake
-	${PROJECT_ROOT_DIR}/external/googletest/googletest;/external/googletest/googletest
 )
 include (CPack)
 
