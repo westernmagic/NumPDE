@@ -31,7 +31,30 @@ void computeStiffnessMatrix(MatrixType& stiffnessMatrix,
     Eigen::Matrix2d coordinateTransform = makeCoordinateTransform(b - a, c - a);
     double volumeFactor = std::abs(coordinateTransform.determinant());
     Eigen::Matrix2d elementMap = coordinateTransform.inverse().transpose();
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    for (int i = 0; i < 3; ++i) {
+        for (int j = i; j < 3; ++j) {
+
+            stiffnessMatrix(i, j) = integrate([&](double x, double y) {
+                Eigen::Vector2d gradLambdaI = elementMap * gradientLambda(i, x, y);
+                Eigen::Vector2d gradLambdaJ = elementMap * gradientLambda(j, x, y);
+
+                auto lambdaI = lambda(i, x, y);
+                auto lambdaJ = lambda(j, x, y);
+               
+                return volumeFactor * gradLambdaI.dot(gradLambdaJ);
+
+            });
+        }
+    }
+    
+    // Make symmetric (we did not need to compute these value above)
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < i; ++j) {
+            stiffnessMatrix(i, j) = stiffnessMatrix(j, i);
+        }
+    }
+    //// NPDE_END_TEMPLATE
 
     
 }

@@ -25,10 +25,14 @@ int solveFiniteElement(Vector& u,
     const std::function<double(double, double)>& f)
 {
     SparseMatrix A;
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    assembleStiffnessMatrix(A, vertices, triangles);
+    //// NPDE_END_TEMPLATE
 
     Vector F;
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    assembleLoadVector(F, vertices, triangles, f);
+    //// NPDE_END_TEMPLATE
 
     u.resize(vertices.rows());
     u.setZero();
@@ -36,7 +40,10 @@ int solveFiniteElement(Vector& u,
 
     auto zerobc = [](double x, double y){ return 0;};
     // set homogeneous Dirichlet Boundary conditions
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    setDirichletBoundary(u, interiorVertexIndices, vertices, triangles, zerobc);
+    F -= A * u;
+    //// NPDE_END_TEMPLATE
 
     SparseMatrix AInterior;
 
@@ -48,10 +55,19 @@ int solveFiniteElement(Vector& u,
     igl::slice(F, interiorVertexIndices, FInterior);
 
     //initialize solver for AInterior
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    solver.compute(AInterior);
+
+    if (solver.info() != Eigen::Success) {
+        throw std::runtime_error("Could not decompose the matrix");
+    }
+    //// NPDE_END_TEMPLATE
 
     //solve interior system
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    Vector uInterior = solver.solve(FInterior);
+    igl::slice_into(uInterior, interiorVertexIndices, u);
+    //// NPDE_END_TEMPLATE
 
     return interiorVertexIndices.size();
 

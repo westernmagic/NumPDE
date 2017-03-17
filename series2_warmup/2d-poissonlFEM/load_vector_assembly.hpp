@@ -19,6 +19,21 @@ void assembleLoadVector(Eigen::VectorXd& F,
 
      F.resize(vertices.rows());
      F.setZero();
-// (write your solution here)
+     //// NPDE_START_TEMPLATE
+     for (int i = 0; i < numberOfElements; ++i) {
+         const auto& indexSet = triangles.row(i);
+
+         const auto& a = vertices.row(indexSet(0));
+         const auto& b = vertices.row(indexSet(1));
+         const auto& c = vertices.row(indexSet(2));
+
+         Eigen::Vector3d elementVector;
+         computeLoadVector(elementVector, a, b, c, f);
+
+         for (int i = 0; i < 3; ++i) {
+            F(indexSet(i)) += elementVector(i);
+         }
+     }
+     //// NPDE_END_TEMPLATE
 }
 //----------------AssembleVectorEnd----------------

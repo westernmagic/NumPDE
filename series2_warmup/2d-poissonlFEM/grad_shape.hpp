@@ -10,6 +10,9 @@
 //! @param x x coordinate in the reference element.
 //! @param y y coordinate in the reference element.
 inline Eigen::Vector2d gradientLambda(const int i, double x, double y) {
-// (write your solution here)
+  //// NPDE_START_TEMPLATE
+    return Eigen::Vector2d(-1 + (i > 0) + (i==1),
+                           -1 + (i > 0) + (i==2));
+    //// NPDE_END_TEMPLATE
     return Eigen::Vector2d(0,0); //remove when implemented
 }

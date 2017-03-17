@@ -13,6 +13,14 @@
 //! @param x x coordinate in the reference element.
 //! @param y y coordinate in the reference element.
 inline double lambda(int i, double x, double y) {
-// (write your solution here)
-return 0; //remove when implemented
+  //// NPDE_START_TEMPLATE
+    if (i == 0) {
+        return 1 - x - y;
+    } else if (i == 1) {
+        return x;
+    } else {
+        return y;
+    }
+    //// NPDE_RETURN_TEMPLATE
+    //// NPDE_END_TEMPLATE
 }
