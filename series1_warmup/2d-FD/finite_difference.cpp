@@ -26,7 +26,28 @@ typedef double(*FunctionPointer)(double, double);
 void createPoissonMatrix2D(SparseMatrix& A, int N) {
      // Fill the matrix A using setFromTriplets - method (see other exercise
     // for how to use it).
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    std::vector<Triplet> triplets;
+    A.resize(N*N, N*N);
+    triplets.reserve(5*N*N-4*N);
+    for (int i = 0; i < N*N; ++i) {
+        triplets.push_back(Triplet(i, i, 4));
+        if (i % N != 0) {
+            triplets.push_back(Triplet(i, i-1, -1));
+        }
+        if (i % N != N - 1) {
+            triplets.push_back(Triplet(i, i+1, -1));
+        }
+        if (i >= N) {
+            triplets.push_back(Triplet(i, i-N, -1));
+        }
+        if (i < N*N - N ) {
+            triplets.push_back(Triplet(i, i+N, -1));
+        }
+    }
+
+    A.setFromTriplets(triplets.begin(), triplets.end());
+    //// NPDE_END_TEMPLATE
 }
 //----------------poissonEnd----------------
 
@@ -41,7 +62,15 @@ void createRHS(Vector& rhs, FunctionPointer f, int N, double dx) {
     rhs.resize(N * N);
     // fill up RHS
     // remember that the index (i,j) corresponds to i*N+j
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+            const double x = (i + 1) * dx;
+            const double y = (j + 1) * dx;
+            rhs[j * N + i] = dx * dx * f(x, y);
+        }
+    }
+    //// NPDE_END_TEMPLATE
 }
 //----------------RHSEnd----------------
 
@@ -53,7 +82,34 @@ void createRHS(Vector& rhs, FunctionPointer f, int N, double dx) {
 //! @param[in] N the number of points to use (in x direction)
 void poissonSolve(Vector& u, FunctionPointer f, int N) {
     // Solve Poisson 2D here
-// (write your solution here)
+    //// NPDE_START_TEMPLATE
+    double dx = 1.0 / (N + 1);
+
+    SparseMatrix A;
+    createPoissonMatrix2D(A, N);
+
+    Vector rhs;
+    createRHS(rhs, f, N, dx);
+
+    Eigen::SparseLU<SparseMatrix> solver;
+    solver.compute(A);
+
+    if ( solver.info() !=  Eigen::Success) {
+        throw std::runtime_error("Could not decompose the matrix");
+    }
+    u.resize((N + 2) * (N + 2));
+    u.setZero();
+
+    Vector innerU = solver.solve(rhs);
+
+    // Copy vector to inner u.
+    for (int i = 1; i < N + 1; ++i) {
+        for (int j = 1; j < N + 1; ++j) {
+            u[i * (N + 2) + j] = innerU[(i - 1) * N + j - 1];
+        }
+    }
+
+    //// NPDE_END_TEMPLATE
 }
 //----------------solveEnd----------------
 
