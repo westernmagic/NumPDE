@@ -1,19 +1,7 @@
-cmake_minimum_required (VERSION 3.1.0)
+include_directories (.)
+include_directories (midpoint)
 
-include("cmake/CommonHeader.cmake")
-project("numpde_midpoint")
+add_subdirectory (midpoint)
+add_subdirectory (test_convergence)
+add_subdirectory (test_single)
 
-
-
-SET(LIBRARY_NAME "midpoint")
-FILE(GLOB LIBRARY_SRC ${LIBRARY_NAME}/*.cpp ${LIBRARY_NAME}/*.hpp)
-ADD_LIBRARY(${LIBRARY_NAME} ${LIBRARY_SRC})
-
-INCLUDE_DIRECTORIES("." ${LIBRARY_NAME})
-
-FOREACH(DIRECTORY "test_single" "test_convergence")
-  FILE(GLOB SRC ${DIRECTORY}/*.cpp ${DIRECTORY}/*.hpp)
-
-  ADD_EXECUTABLE(${DIRECTORY} ${SRC})
-  TARGET_LINK_LIBRARIES(${DIRECTORY} ${LIBRARY_NAME})
-ENDFOREACH()
