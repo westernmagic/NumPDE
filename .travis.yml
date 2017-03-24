@@ -1,8 +1,6 @@
 language: cpp
 sudo: false
 
-compiler: gcc
-
 os: linux
 
 before_script:
@@ -16,20 +14,30 @@ script:
 
 addons:
     apt:
-        sources:
+        sources: &global_apt_sources
             - george-edison55-precise-backports
-            - ubuntu-toolchain-r-test
-        packages:
+        packages: &global_apt_packages
             - cmake
             - cmake-data
-            #- g++-6
 
-#env: COMPILER=g++-6
 matrix:
     include:
         - compiler: gcc
-          addons:
-              apt:
-                  packages:
-                      g++-6
+          env: COMPILER=g++-5
+          apt:
+              sources:
+                  - *global_apt_sources
+                  - ubuntu-toolchain-r-test
+              packages:
+                  - *global_apt_packages
+                  - g++-5
+        - compiler: gcc
           env: COMPILER=g++-6
+          apt:
+              sources:
+                  - *global_apt_sources
+                  - ubuntu-toolchain-r-test
+              packages:
+                  - *global_apt_packages
+                  - g++-6
+
