@@ -24,20 +24,21 @@ matrix:
     include:
         - compiler: gcc
           env: COMPILER=g++-5
-          apt:
-              sources:
-                  - *global_apt_sources
-                  - ubuntu-toolchain-r-test
-              packages:
-                  - *global_apt_packages
-                  - g++-5
+              apt:
+                  sources:
+                      - *global_apt_sources
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - *global_apt_packages
+                      - g++-5
         - compiler: gcc
           env: COMPILER=g++-6
-          apt:
-              sources:
-                  - *global_apt_sources
-                  - ubuntu-toolchain-r-test
-              packages:
-                  - *global_apt_packages
-                  - g++-6
+          addons:
+              apt:
+                  sources:
+                      - *global_apt_sources
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - *global_apt_packages
+                      - g++-6
 
