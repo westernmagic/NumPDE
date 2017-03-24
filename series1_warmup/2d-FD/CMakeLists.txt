@@ -1,21 +1,3 @@
-# Mandatory information that CMAKE needs
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0)
+add_executable (2d-FD finite_difference.cpp)
+target_link_libraries (2d-FD Eigen3::Eigen)
 
-# Project name
-PROJECT (2d_finite_difference)
-INCLUDE("cmake/CommonHeader.cmake")
-INCLUDE("cmake/Compiler.cmake")
-# So that Visual Studio will define M_PI
-ADD_DEFINITIONS(-D_USE_MATH_DEFINES)
-
-INCLUDE_DIRECTORIES(".")
-INCLUDE_DIRECTORIES("..")
-INCLUDE("cmake/GetEigen.cmake")
-
-
-INCLUDE_DIRECTORIES(".")
-INCLUDE_DIRECTORIES("..")
-
-SET(SRC_FD "finite_difference.cpp") # Source
-ADD_EXECUTABLE(finite_difference ${SRC_FD}) 
-ADD_DEPENDENCIES(finite_difference Eigen)
