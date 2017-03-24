@@ -3,6 +3,8 @@ sudo: false
 
 os: linux
 
+env:
+
 before_script:
     - mkdir build
 
@@ -23,7 +25,7 @@ addons:
 matrix:
     include:
         - compiler: gcc
-          env: COMPILER=g++-5
+          env: CXX=g++-5
           addons:
               apt:
                   sources:
@@ -33,7 +35,7 @@ matrix:
                       - *global_apt_packages
                       - g++-5
         - compiler: gcc
-          env: COMPILER=g++-6
+          env: CXX=g++-6
           addons:
               apt:
                   sources:
