@@ -1,15 +1,9 @@
 language: cpp
-
 sudo: false
 
-compiler:
-    - gcc
+compiler: gcc
 
-os:
-    - linux
-
-install:
-    - git submodule update --init --recursive
+os: linux
 
 before_script:
     - mkdir build
@@ -28,7 +22,14 @@ addons:
         packages:
             - cmake
             - cmake-data
-            - g++-6
+            #- g++-6
 
-env: COMPILER=g++-6
-
+#env: COMPILER=g++-6
+matrix:
+    include:
+        - compiler: gcc
+          addons:
+              apt:
+                  packages:
+                      g++-6
+          env: COMPILER=g++-6
