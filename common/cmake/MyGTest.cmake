@@ -9,5 +9,8 @@ if (NOT EXISTS ${GTEST_ROOT})
 endif (NOT EXISTS ${GTEST_ROOT})
 
 add_subdirectory (${GTEST_ROOT} googletest)
+set_property (TARGET gtest      PROPERTY EXCLUDE_FROM_ALL TRUE)
+set_property (TARGET gtest_main PROPERTY EXCLUDE_FROM_ALL TRUE)
+
 include (FindGTest)
 
