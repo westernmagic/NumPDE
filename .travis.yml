@@ -3,6 +3,11 @@ sudo: false
 
 os: linux
 
+cache:
+    apt: true
+    directories:
+        - external
+
 before_install:
     - eval "${MATRIX_EVAL}"
 
