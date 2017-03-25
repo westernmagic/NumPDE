@@ -1,8 +1,6 @@
 language: cpp
 sudo: false
 
-os: linux
-
 cache:
     apt: true
     directories:
@@ -30,17 +28,8 @@ addons:
 
 matrix:
     include:
-        - compiler: gcc
-          env: MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
-          addons:
-              apt:
-                  sources:
-                      - *global_apt_sources
-                      - ubuntu-toolchain-r-test
-                  packages:
-                      - *global_apt_packages
-                      - g++-5
-        - compiler: gcc
+        - os: linux
+          compiler: gcc
           env: MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
           addons:
               apt:
@@ -50,4 +39,17 @@ matrix:
                   packages:
                       - *global_apt_packages
                       - g++-6
+        - os: linux
+          compiler: clang
+          env: MATRIX_EVAL="CC=clang-4.0 && CXX=clang-4.0"
+          addons:
+              apt:
+                  sources:
+                      - *global_apt_sources
+                      - llvm-toolchain-precise
+                  packages:
+                      - *global_apt_packages
+                      - clang-4.0
+        - os: osx
+          osx_image: xcode8.2
 
