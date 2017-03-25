@@ -18,7 +18,7 @@ script:
     - cd build
     - cmake ..
     - cmake --build .
-    - ctest
+#    - ctest
 
 addons:
     apt:
