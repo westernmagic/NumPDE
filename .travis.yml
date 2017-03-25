@@ -46,6 +46,7 @@ matrix:
               apt:
                   sources:
                       - *global_apt_sources
+                      - ubuntu-toolchain-r-test
                       - llvm-toolchain-precise-3.9
                   packages:
                       - *global_apt_packages
