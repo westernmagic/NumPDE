@@ -1,3 +1,13 @@
+list (FIND CMAKE_CXX_COMPILE_FEATURES cxx_std_14 CXX_STD_14)
+
+set (CXX_STD_MAX 11)
+if (CXX_STD_14 GREATER_EQUAL -1)
+	set (CXX_STD_MAX 14)
+endif (CXX_STD_14 GREATER_EQUAL -1)
+
+set (CMAKE_CXX_STANDARD ${CXX_STD_MAX})
+set (CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
 # adapted from
 # https://github.com/RLovelett/eigen/blob/master/CMakeLists.txt
 
