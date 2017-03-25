@@ -49,5 +49,9 @@ if (LIBIGL_FOUND AND NOT TARGET IGL::IGL)
 	set_property (TARGET glew         PROPERTY EXCLUDE_FROM_ALL TRUE)
 	set_property (TARGET glfw         PROPERTY EXCLUDE_FROM_ALL TRUE)
 	set_property (TARGET glfw_objects PROPERTY EXCLUDE_FROM_ALL TRUE)
+
+	target_compile_options (glew         PRIVATE -w)
+	target_compile_options (glfw         PRIVATE -w)
+	target_compile_options (glfw_objects PRIVATE -w)
 endif (LIBIGL_FOUND AND NOT TARGET IGL::IGL)
 
