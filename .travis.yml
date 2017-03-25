@@ -41,15 +41,15 @@ matrix:
                       - g++-6
         - os: linux
           compiler: clang
-          env: MATRIX_EVAL="CC=clang-4.0 && CXX=clang-4.0"
+          env: MATRIX_EVAL="CC=clang-3.9 && CXX=clang-3.9"
           addons:
               apt:
                   sources:
                       - *global_apt_sources
-                      - llvm-toolchain-precise
+                      - llvm-toolchain-precise-3.9
                   packages:
                       - *global_apt_packages
-                      - clang-4.0
+                      - clang-3.9
         - os: osx
           osx_image: xcode8.2
 
