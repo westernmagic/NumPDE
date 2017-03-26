@@ -1,0 +1,56 @@
+language: cpp
+sudo: false
+
+cache:
+    apt: true
+    directories:
+        - external
+
+before_install:
+    - eval "${MATRIX_EVAL}"
+
+before_script:
+    - mkdir build
+
+script:
+    - cd build
+    - cmake ..
+    - cmake --build .
+#    - ctest
+
+addons:
+    apt:
+        sources: &global_apt_sources
+            - george-edison55-precise-backports
+        packages: &global_apt_packages
+            - cmake
+            - cmake-data
+
+matrix:
+    include:
+        - os: linux
+          compiler: gcc
+          env: MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+          addons:
+              apt:
+                  sources:
+                      - *global_apt_sources
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - *global_apt_packages
+                      - g++-6
+        - os: linux
+          compiler: clang
+          env: MATRIX_EVAL="CC=clang-3.9 && CXX=clang++-3.9"
+          addons:
+              apt:
+                  sources:
+                      - *global_apt_sources
+                      - ubuntu-toolchain-r-test
+                      - llvm-toolchain-precise-3.9
+                  packages:
+                      - *global_apt_packages
+                      - clang-3.9
+        - os: osx
+          osx_image: xcode8.2
+

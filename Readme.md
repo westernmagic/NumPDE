@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/westernmagic/NumPDE.svg?token=oXBJR2fnFJyyeSMnYqqk&branch=master)](https://travis-ci.com/westernmagic/NumPDE)
 # NumPDE FS 2017
 
 ## Cloning

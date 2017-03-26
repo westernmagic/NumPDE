@@ -12,5 +12,8 @@ add_subdirectory (${GTEST_ROOT} googletest)
 set_property (TARGET gtest      PROPERTY EXCLUDE_FROM_ALL TRUE)
 set_property (TARGET gtest_main PROPERTY EXCLUDE_FROM_ALL TRUE)
 
+target_compile_options (gtest      PRIVATE -w)
+target_compile_options (gtest_main PRIVATE -w)
+
 include (FindGTest)
 

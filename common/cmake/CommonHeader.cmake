@@ -1,3 +1,6 @@
+set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
 # adapted from
 # https://github.com/RLovelett/eigen/blob/master/CMakeLists.txt
 

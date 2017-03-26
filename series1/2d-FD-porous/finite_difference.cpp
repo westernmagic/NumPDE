@@ -5,6 +5,7 @@
 #include <Eigen/SparseCholesky>
 #include <stdexcept>
 #include <iostream>
+#include <array>
 
 //! Sparse Matrix type. Makes using this type easier.
 typedef Eigen::SparseMatrix<double> SparseMatrix;
