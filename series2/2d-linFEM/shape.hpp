@@ -1,5 +1,6 @@
 #pragma once
-
+#include <cassert>
+#include <stdexcept>
 
 //! The shape function (on the reference element)
 //! 
@@ -13,6 +14,18 @@
 //! @param x x coordinate in the reference element.
 //! @param y y coordinate in the reference element.
 inline double lambda(int i, double x, double y) {
-// (write your solution here)
-return 0; //remove when implemented
+	// (write your solution here)
+	assert(0 <= i && i <= 2);
+	switch(i) {
+		case 0:
+			return 1 - x - y;
+		case 1:
+			return x;
+		case 2:
+			return y;
+		default:
+			throw std::domain_error("i not in {0,1,2}");
+	}
+
+	//return 0; //remove when implemented
 }
