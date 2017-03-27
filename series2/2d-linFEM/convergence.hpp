@@ -47,17 +47,20 @@ void convergenceAnalysis(const std::string& baseMeshName, int maxLevel,
         igl::readMESH(std::string(NPDE_DATA_PATH)
             + basename + ".mesh", vertices, tetrahedra, triangles);
         std::cout << "Computing convergence. At: " << basename << std::endl;
-	// solve finite element system
-// (write your solution here)
+		// solve finite element system
+		// (write your solution here)
+		numberOfDegreesOfFreedom.push_back(solveFiniteElement(u, vertices, triangles, f, sigma, g, r));
 
-	//compute L2-error and save it in the corresponding vector
-// (write your solution here)
+		//compute L2-error and save it in the corresponding vector
+		// (write your solution here)
+		differences_L2.push_back(computeL2Difference(vertices, triangles, u, exactSol));
 
-	//compute H1-error and save it in the corresponding vector
-// (write your solution here)
+		//compute H1-error and save it in the corresponding vector
+		// (write your solution here)
+		differences_H1.push_back(computeH1Difference(vertices, triangles, u, exactSol_grad));
 
-	// store number of dofs in vector
-// (write your solution here)
+		// store number of dofs in vector
+		// (write your solution here)
 
         writeToFile(basename + "_values.txt", u);
         writeMatrixToFile(basename + "_vertices.txt", vertices);

@@ -42,13 +42,11 @@ int main(int, char**) {
 
     solveL(0.5);
 
-    /*
     std::cout << "Convergence Analysis" << std::endl;
     convergenceAnalysis("square", 7, f_square, sigma, g_square, 0,
 			uex_square, uex_grad_square);
     convergenceAnalysis("Lshape", 7, f_lshape, sigma, g_lshape, 0,
 			g_lshape, g_grad_lshape);
-    */
 
     
     }
