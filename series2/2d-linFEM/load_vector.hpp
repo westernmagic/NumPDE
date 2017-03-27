@@ -31,8 +31,20 @@ void computeLoadVector(Vector& loadVector,
 {
     Eigen::Matrix2d coordinateTransform = makeCoordinateTransform(b - a, c - a);
     double volumeFactor = std::abs(coordinateTransform.determinant());
-// (write your solution here)
+	// (write your solution here)
+	loadVector.resize(3);
 
+	auto PhiK = [&](Eigen::Vector2d x) -> Eigen::Vector2d {
+		return coordinateTransform * x + a.transpose() ;
+	};
+
+	for (int i = 0; i < 3; i++) {
+		auto ff = [&](double x, double y) -> double {
+			Eigen::Vector2d transformedPoint = PhiK(Eigen::Vector2d(x, y));
+			return f(transformedPoint.x(), transformedPoint.y()) * lambda(i, x, y) * volumeFactor;
+		};
+		loadVector(i) = integrate(ff);
+	}
 
 }
 //----------------compVectorEnd----------------
