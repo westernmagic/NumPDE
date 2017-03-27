@@ -20,39 +20,34 @@ typedef Eigen::Triplet<double> Triplet;
 //! @param[in] triangles a list of triangles
 //! @param[in] sigma the function sigma as in the exercise
 //! @param[in] r the parameter r as in the exercise
-template<class Matrix>
-void assembleStiffnessMatrix(Matrix& A, const Eigen::MatrixXd& vertices,
-			     const Eigen::MatrixXi& triangles,
-			     const std::function<double(double, double)>& sigma = constantFunction,
-			     double r=0)
-{
-    
-    const int numberOfElements = triangles.rows();
-    A.resize(vertices.rows(), vertices.rows());
-    
-    std::vector<Triplet> triplets;
+template <class Matrix>
+void assembleStiffnessMatrix(Matrix &A, const Eigen::MatrixXd &vertices, const Eigen::MatrixXi &triangles, const std::function<double(double, double)> &sigma = constantFunction, double r = 0) {
+	const int numberOfElements = triangles.rows();
+	A.resize(vertices.rows(), vertices.rows());
 
-    triplets.reserve(numberOfElements * 3 * 3);
+	std::vector<Triplet> triplets;
+
+	triplets.reserve(numberOfElements * 3 * 3);
 	// (write your solution here)
 	//// NPDE_START_TEMPLATE
-    for (int i = 0; i < numberOfElements; ++i) {
-        auto& indexSet = triangles.row(i);
+	for (int i = 0; i < numberOfElements; ++i) {
+		auto &indexSet = triangles.row(i);
 
-        const auto& a = vertices.row(indexSet(0));
-        const auto& b = vertices.row(indexSet(1));
-        const auto& c = vertices.row(indexSet(2));
+		const auto &a = vertices.row(indexSet(0));
+		const auto &b = vertices.row(indexSet(1));
+		const auto &c = vertices.row(indexSet(2));
 
-        Eigen::Matrix3d stiffnessMatrix;
-        computeStiffnessMatrix(stiffnessMatrix, a, b, c, sigma, r);
+		Eigen::Matrix3d stiffnessMatrix;
+		computeStiffnessMatrix(stiffnessMatrix, a, b, c, sigma, r);
 
-        for (int n = 0; n < 3; ++n) {
-            for (int m = 0; m < 3; ++m) {
-                auto triplet = Triplet(indexSet(n), indexSet(m), stiffnessMatrix(n, m));
-                triplets.push_back(triplet);
-            }
-        }
-    }
-    //// NPDE_END_TEMPLATE
-    A.setFromTriplets(triplets.begin(), triplets.end());
+		for (int n = 0; n < 3; ++n) {
+			for (int m = 0; m < 3; ++m) {
+				auto triplet = Triplet(indexSet(n), indexSet(m), stiffnessMatrix(n, m));
+				triplets.push_back(triplet);
+			}
+		}
+	}
+	//// NPDE_END_TEMPLATE
+	A.setFromTriplets(triplets.begin(), triplets.end());
 }
 //----------------AssembleMatrixEnd----------------

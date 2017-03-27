@@ -1,17 +1,17 @@
 #pragma once
-#include <functional>
-#include <vector>
+#include "H1_norm.hpp"
+#include "L2_norm.hpp"
+#include "fem_solve.hpp"
+#include "writer.hpp"
 #include <Eigen/Core>
 #include <Eigen/Dense>
-#include "fem_solve.hpp"
-#include "L2_norm.hpp"
-#include "H1_norm.hpp"
-#include "writer.hpp"
+#include <functional>
 #include <igl/readMESH.h>
+#include <vector>
 
 //----------------convBegin----------------
 //! Compute the L2 and H1-error for different meshes.
-//! 
+//!
 //! @param baseMeshName the basename for the mesh (eg. Square).
 //!                     the method will automatically append _<n>.stl
 //!
@@ -24,29 +24,27 @@
 //! @param[in] r the parameter r from the lecture notes
 //! @param exactSol the exact solution (found by eg. hand computation or googling).
 //! @param exactSol_grad the gradient of the exact solution.
-void convergenceAnalysis(const std::string& baseMeshName, int maxLevel,
-			 const std::function<double(double, double)> f,
-			 const std::function<double(double, double)>& sigma,
-			 const std::function<double(double, double)> g, double r,
-			 const std::function<double(double, double)> exactSol,
-			 const std::function<Eigen::Vector2d(double,double)> exactSol_grad)
-{
-    std::vector<double> differences_L2;
-    std::vector<double> differences_H1;
-    std::vector<int> numberOfDegreesOfFreedom;
-    for (int i = 0; i <= maxLevel; i++) {
-        Vector u;
-        Eigen::MatrixXd vertices;
-        Eigen::MatrixXi triangles;
-        Eigen::MatrixXi tetrahedra;
+void convergenceAnalysis(const std::string &baseMeshName, int maxLevel, const std::function<double(double, double)> f, const std::function<double(double, double)> &sigma, const std::function<double(double, double)> g, double r, const std::function<double(double, double)> exactSol, const std::function<Eigen::Vector2d(double, double)> exactSol_grad) {
+	std::vector<double> differences_L2;
+	std::vector<double> differences_H1;
+	std::vector<int>    numberOfDegreesOfFreedom;
+	for (int i = 0; i <= maxLevel; i++) {
+		Vector          u;
+		Eigen::MatrixXd vertices;
+		Eigen::MatrixXi triangles;
+		Eigen::MatrixXi tetrahedra;
 
-        std::stringstream basenameSS;
-        basenameSS << baseMeshName << "_" << i;
-        std::string basename = basenameSS.str();
+		std::stringstream basenameSS;
+		basenameSS << baseMeshName << "_" << i;
+		std::string basename = basenameSS.str();
 
-        igl::readMESH(std::string(NPDE_DATA_PATH)
-            + basename + ".mesh", vertices, tetrahedra, triangles);
-        std::cout << "Computing convergence. At: " << basename << std::endl;
+		igl::readMESH(std::string(NPDE_DATA_PATH)
+		                  + basename
+		                  + ".mesh",
+		              vertices,
+		              tetrahedra,
+		              triangles);
+		std::cout << "Computing convergence. At: " << basename << std::endl;
 		// solve finite element system
 		// (write your solution here)
 		numberOfDegreesOfFreedom.push_back(solveFiniteElement(u, vertices, triangles, f, sigma, g, r));
@@ -62,19 +60,19 @@ void convergenceAnalysis(const std::string& baseMeshName, int maxLevel,
 		// store number of dofs in vector
 		// (write your solution here)
 
-        writeToFile(basename + "_values.txt", u);
-        writeMatrixToFile(basename + "_vertices.txt", vertices);
-        writeMatrixToFile(basename + "_triangles.txt", triangles);
-    }
+		writeToFile(basename + "_values.txt", u);
+		writeMatrixToFile(basename + "_vertices.txt", vertices);
+		writeMatrixToFile(basename + "_triangles.txt", triangles);
+	}
 
-    std::stringstream errorL2Filename;
-    errorL2Filename << baseMeshName << "_errors.txt";
+	std::stringstream errorL2Filename;
+	errorL2Filename << baseMeshName << "_errors.txt";
 
-    std::stringstream errorH1Filename;
-    errorH1Filename << baseMeshName << "_errorsH1.txt";
+	std::stringstream errorH1Filename;
+	errorH1Filename << baseMeshName << "_errorsH1.txt";
 
-    writeToFile(errorL2Filename.str(), differences_L2);
-    writeToFile(errorH1Filename.str(), differences_H1);
-    writeToFile(baseMeshName + "_resolutions.txt", numberOfDegreesOfFreedom);
+	writeToFile(errorL2Filename.str(), differences_L2);
+	writeToFile(errorH1Filename.str(), differences_H1);
+	writeToFile(baseMeshName + "_resolutions.txt", numberOfDegreesOfFreedom);
 }
 //----------------convEnd----------------

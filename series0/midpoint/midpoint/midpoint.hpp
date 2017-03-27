@@ -3,7 +3,7 @@
 /// This is the type of a function taking as parameter a double, and
 /// return a double
 ///
-typedef double(*FunctionPointer)(double);
+typedef double (*FunctionPointer)(double);
 
 ///
 /// Computes the midpoint rule to approximate the integral

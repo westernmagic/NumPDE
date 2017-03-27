@@ -5,7 +5,7 @@
 #include <tuple>
 
 //! The gradient of the shape function (on the reference element)
-//! 
+//!
 //! We have three shape functions
 //!
 //! @param i integer between 0 and 2 (inclusive). Decides which shape function to return.
@@ -16,7 +16,7 @@ inline Eigen::Vector2d gradientLambda(const int i, double x, double y) {
 	std::ignore = x;
 	std::ignore = y;
 	assert(0 <= i && i <= 2);
-	switch(i) {
+	switch (i) {
 		case 0:
 			return Eigen::Vector2d(-1, -1);
 		case 1:
@@ -27,5 +27,5 @@ inline Eigen::Vector2d gradientLambda(const int i, double x, double y) {
 			throw std::domain_error("i not in {0,1,2}");
 	}
 
-    return Eigen::Vector2d(0,0); //remove when implemented
+	return Eigen::Vector2d(0, 0); //remove when implemented
 }

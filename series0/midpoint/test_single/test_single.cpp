@@ -11,24 +11,24 @@
 // for our usual math functions and constants
 #include <math.h>
 
-// We use these two to set the precision of our output. 
-#include <limits>
+// We use these two to set the precision of our output.
 #include <iomanip>
+#include <limits>
 
 double f(double x) {
-    return sin(M_PI * x);
+	return sin(M_PI * x);
 }
 
-int main(int, char**) {
-    // TODO: Compute the proper approximation here:
-    double In = 0; 
-// (write your solution here)
+int main(int, char **) {
+	// TODO: Compute the proper approximation here:
+	double In = 0;
+	// (write your solution here)
 
-    // Set high precision for output, easier to see what is going on:
-    std::cout << std::setprecision(std::numeric_limits<long double>::digits10 + 1);
-    
-    // We print out the value of the midpoint rule here:
-    std::cout << "In = " << In << std::endl;
+	// Set high precision for output, easier to see what is going on:
+	std::cout << std::setprecision(std::numeric_limits<long double>::digits10 + 1);
 
-    return 0;
+	// We print out the value of the midpoint rule here:
+	std::cout << "In = " << In << std::endl;
+
+	return 0;
 }
