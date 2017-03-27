@@ -4,6 +4,7 @@
 #include <fstream>
 #include <limits>
 #include <iomanip>
+#include <cmath>
 
 ///
 /// Converts the argument to string in an OS-independent manner
@@ -12,7 +13,15 @@
 ///
 template<class T>
 void printToStream(std::ostream& out, const T& in) {
-    out << in;
+    if (in != in) { // in is NaN
+        out << "NaN";
+    }
+    else if (std::isfinite(in)) {
+        out << in;
+    }
+    else {
+        out << "inf";
+    }
 }
 
 ///
@@ -29,7 +38,7 @@ void writeToFile(const std::string& filename,
     file << std::setprecision(std::numeric_limits<long double>::digits10 + 1);
 
     // Loop over vector and write output to file
-    for(int i = 0; i < data.size(); ++i) {
+    for(unsigned int i = 0; i < data.size(); ++i) {
         printToStream(file, data[i]);
         file << " ";
     }
