@@ -29,6 +29,16 @@ void createStiffnessMatrixWithBoundary(SparseMatrix &A, int N, double dx) {
 	triplets.reserve((N + 2) + 2 * N + 2);
 
 	// (write your solution here)
+	A.setZero();
+	for (int i = 0; i < N + 2; i++) {
+		triplets.push_back(Triplet(i, i, 2 / dx));
+		if (i >= 1) {
+			triplets.push_back(Triplet(i, i - 1, -1 / dx));
+		}
+		if (i <= N + 1) {
+			triplets.push_back(Triplet(i, i + 1, -1 / dx));
+		}
+	}
 	A.setFromTriplets(triplets.begin(), triplets.end());
 }
 
