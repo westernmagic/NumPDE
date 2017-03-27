@@ -51,6 +51,11 @@ void createRHS(Vector &rhs, FunctionPointer f, int N, double dx, const Vector &x
 	rhs.resize(N + 2);
 
 	// (write your solution here)
+	rhs(0) = dx / 2 * f(x(0));
+	for (int i = 1; i < N + 1; i++) {
+		rhs(i) = dx * f(x(i));
+	}
+	rhs(N + 1) = dx / 2 * f(x(N + 1));
 }
 
 //! Solve the equation
@@ -86,9 +91,20 @@ void femSolve(Vector &u, Vector &x, FunctionPointer f, int N, double a, double b
 
 	// Do boundary conditions
 	// (write your solution here)
+	u(0)     = ua;
+	u(N + 1) = ub;
+	phi -= A * u;
 
 	//solve inner system
 	// (write your solution here)
+	SparseMatrix innerA = A.block(1, 1, N, N);
+
+	Eigen::SparseLU<SparseMatrix> solver;
+	solver.compute(innerA);
+	if (solver.info() != Eigen::Success) {
+		throw std::runtime_error("Could not decompose the matrix.");
+	}
+	u.segment(1, N) = solver.solve(phi.segment(1, N));
 }
 
 void computeWithoutBoundaryValues() {
