@@ -38,7 +38,7 @@ void writeToFile(const std::string& filename,
     file << std::setprecision(std::numeric_limits<long double>::digits10 + 1);
 
     // Loop over vector and write output to file
-    for(int i = 0; i < data.size(); ++i) {
+    for(unsigned int i = 0; i < data.size(); ++i) {
         printToStream(file, data[i]);
         file << " ";
     }
