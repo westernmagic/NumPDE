@@ -1,5 +1,5 @@
 #include "midpoint.hpp" // To use our library
-#include "writer.hpp" // This is the output function to write to file
+#include "writer.hpp"   // This is the output function to write to file
 
 // We store our results in a vector
 #include <vector>
@@ -12,12 +12,11 @@
 #include <math.h>
 
 double f(double x) {
-    return sin(M_PI * x);
+	return sin(M_PI * x);
 }
 
+int main(int, char **) {
+	// (write your solution here)
 
-int main(int, char**) {
-// (write your solution here)
-
-    return 0;
+	return 0;
 }

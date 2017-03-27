@@ -31,8 +31,15 @@ set (CMAKE_SKIP_INSTALL_RULES TRUE)
 
 add_compile_options (-Wall -Wextra)
 
+find_package (OpenMP)
+if (OPENMP_FOUND)
+	list (APPEND CMAKE_C_FLAGS       ${OpenMP_C_FLAGS})
+	list (APPEND CMAKE_CXX_FLAGS     ${OpenMP_CXX_FLAGS})
+	list (APPEND CMAKE_FORTRAN_FLAGS ${OpenMP_Fortran_FLAGS})
+endif (OPENMP_FOUND)
+
 if (MVSC)
-        # So that Visual Studio will define M_PI
-        add_definitions (-D_USE_MATH_DEFINES)
+	# So that Visual Studio will define M_PI
+	add_definitions (-D_USE_MATH_DEFINES)
 endif (MVSC)
 

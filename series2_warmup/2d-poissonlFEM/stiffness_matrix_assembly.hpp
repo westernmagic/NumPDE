@@ -18,18 +18,15 @@ typedef Eigen::Triplet<double> Triplet;
 //! @param[out] A will at the end contain the Galerkin matrix
 //! @param[in] vertices a list of triangle vertices
 //! @param[in] triangles a list of triangles
-template<class Matrix>
-void assembleStiffnessMatrix(Matrix& A, const Eigen::MatrixXd& vertices,
-                            const Eigen::MatrixXi& triangles)
-{
-    
-    const int numberOfElements = triangles.rows();
-    A.resize(vertices.rows(), vertices.rows());
-    
-    std::vector<Triplet> triplets;
+template <class Matrix>
+void assembleStiffnessMatrix(Matrix &A, const Eigen::MatrixXd &vertices, const Eigen::MatrixXi &triangles) {
+	const int numberOfElements = triangles.rows();
+	A.resize(vertices.rows(), vertices.rows());
 
-    triplets.reserve(numberOfElements * 3 * 3);
-// (write your solution here)
-    A.setFromTriplets(triplets.begin(), triplets.end());
+	std::vector<Triplet> triplets;
+
+	triplets.reserve(numberOfElements * 3 * 3);
+	// (write your solution here)
+	A.setFromTriplets(triplets.begin(), triplets.end());
 }
 //----------------AssembleMatrixEnd----------------

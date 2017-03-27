@@ -15,5 +15,5 @@ set_property (TARGET gtest_main PROPERTY EXCLUDE_FROM_ALL TRUE)
 target_compile_options (gtest      PRIVATE -w)
 target_compile_options (gtest_main PRIVATE -w)
 
-include (FindGTest)
+find_package (GTest QUIET)
 

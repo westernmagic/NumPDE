@@ -1,8 +1,8 @@
-#include <Eigen/Sparse>
-#include <iostream>
 #include "writer.hpp"
-#include <cmath>
+#include <Eigen/Sparse>
 #include <Eigen/SparseCholesky>
+#include <cmath>
+#include <iostream>
 #include <stdexcept>
 
 //! Sparse Matrix type. Makes using this type easier.
@@ -11,28 +11,35 @@ typedef Eigen::SparseMatrix<double> SparseMatrix;
 //! Used for filling the sparse matrix.
 typedef Eigen::Triplet<double> Triplet;
 
-
 //! Vector type
 typedef Eigen::VectorXd Vector;
 
-
 //! Our function pointer, typedef'd to make it easier to use
-typedef double(*FunctionPointer)(double);
-
+typedef double (*FunctionPointer)(double);
 
 //! Create the Stiffness matrix for 1D with boundary terms
 //! @param[out] A will be the Galerkin matrix (as in the exercise)
 //! @param[in] N as in the exercise
 //! @param[in] dx the cell length
-void createStiffnessMatrixWithBoundary(SparseMatrix& A, int N, double dx) {
-    std::vector<Triplet> triplets;
-    A.resize(N + 2, N + 2);
+void createStiffnessMatrixWithBoundary(SparseMatrix &A, int N, double dx) {
+	std::vector<Triplet> triplets;
+	A.resize(N + 2, N + 2);
 
-    // Reserve the space we will allocate
-    triplets.reserve((N+2) + 2 * N + 2);
+	// Reserve the space we will allocate
+	triplets.reserve((N + 2) + 2 * N + 2);
 
-// (write your solution here)
-    A.setFromTriplets(triplets.begin(), triplets.end());
+	// (write your solution here)
+	A.setZero();
+	for (int i = 0; i < N + 2; i++) {
+		triplets.push_back(Triplet(i, i, 2 / dx));
+		if (i >= 1) {
+			triplets.push_back(Triplet(i, i - 1, -1 / dx));
+		}
+		if (i <= N + 1) {
+			triplets.push_back(Triplet(i, i + 1, -1 / dx));
+		}
+	}
+	A.setFromTriplets(triplets.begin(), triplets.end());
 }
 
 //! Creates the right hand side for the finite element method in the exericse
@@ -40,13 +47,16 @@ void createStiffnessMatrixWithBoundary(SparseMatrix& A, int N, double dx) {
 //! @param[in] f the function pointer to f
 //! @param[in] dx the cell length
 //! @param[in] x the x points
-void createRHS(Vector& rhs, FunctionPointer f, int N, double dx, const Vector& x) {
-    rhs.resize(N + 2);
+void createRHS(Vector &rhs, FunctionPointer f, int N, double dx, const Vector &x) {
+	rhs.resize(N + 2);
 
-// (write your solution here)
-
+	// (write your solution here)
+	rhs(0) = dx / 2 * f(x(0));
+	for (int i = 1; i < N + 1; i++) {
+		rhs(i) = dx * f(x(i));
+	}
+	rhs(N + 1) = dx / 2 * f(x(N + 1));
 }
-
 
 //! Solve the equation
 //!
@@ -62,57 +72,60 @@ void createRHS(Vector& rhs, FunctionPointer f, int N, double dx, const Vector& x
 //! @param[in] b endpoint on right side
 //! @param[in] ua boundary value at a
 //! @param[in] ub boundary value at b
-void femSolve(Vector& u, Vector& x, FunctionPointer f, int N, double a, double b,
-              double ua = 0.0, double ub = 0.0) {
+void femSolve(Vector &u, Vector &x, FunctionPointer f, int N, double a, double b, double ua = 0.0, double ub = 0.0) {
+	double dx = (b - a) / (N + 1);
 
-    double dx = (b - a) / (N + 1);
+	// Fill x vector
+	x.setLinSpaced(N + 2, a, b);
 
-    // Fill x vector
-    x.setLinSpaced(N+2, a, b);
+	SparseMatrix A;
+	createStiffnessMatrixWithBoundary(A, N, dx);
 
-    SparseMatrix A;
-    createStiffnessMatrixWithBoundary(A, N, dx);
+	Vector phi;
+	createRHS(phi, f, N, dx, x);
 
-    Vector phi;
-    createRHS(phi, f, N, dx, x);
+	// (write your solution here)
 
-// (write your solution here)
+	u.resize((N + 2));
+	u.setZero();
 
-    u.resize((N + 2));
-    u.setZero();
+	// Do boundary conditions
+	// (write your solution here)
+	u(0)     = ua;
+	u(N + 1) = ub;
+	phi -= A * u;
 
-    // Do boundary conditions
-// (write your solution here)
+	//solve inner system
+	// (write your solution here)
+	SparseMatrix innerA = A.block(1, 1, N, N);
 
-    //solve inner system
-// (write your solution here)
-
+	Eigen::SparseLU<SparseMatrix> solver;
+	solver.compute(innerA);
+	if (solver.info() != Eigen::Success) {
+		throw std::runtime_error("Could not decompose the matrix.");
+	}
+	u.segment(1, N) = solver.solve(phi.segment(1, N));
 }
 
-
 void computeWithoutBoundaryValues() {
-    Vector u;
-    Vector x;
-    femSolve(u, x, std::sin, 100, -M_PI, M_PI);
+	Vector u;
+	Vector x;
+	femSolve(u, x, std::sin, 100, -M_PI, M_PI);
 
-    writeToFile("u_wo_bc_fem.txt", u);
-    writeToFile("x_wo_bc_fem.txt", x);
+	writeToFile("u_wo_bc_fem.txt", u);
+	writeToFile("x_wo_bc_fem.txt", x);
 }
 
 void computeWithBoundaryValues() {
-    Vector u;
-    Vector x;
-    femSolve(u, x, std::cos, 100, -M_PI, M_PI, -1.0, 1.0/2.0);
+	Vector u;
+	Vector x;
+	femSolve(u, x, std::cos, 100, -M_PI, M_PI, -1.0, 1.0 / 2.0);
 
-    writeToFile("u_w_bc_fem.txt", u);
-    writeToFile("x_w_bc_fem.txt", x);
+	writeToFile("u_w_bc_fem.txt", u);
+	writeToFile("x_w_bc_fem.txt", x);
 }
 
-int main(int, char**) {
-    computeWithoutBoundaryValues();
-    computeWithBoundaryValues();
+int main(int, char **) {
+	computeWithoutBoundaryValues();
+	computeWithBoundaryValues();
 }
-
-
-
-
