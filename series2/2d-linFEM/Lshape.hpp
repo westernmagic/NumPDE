@@ -2,11 +2,14 @@
 #include <iostream>
 #include <Eigen/Core>
 #include <igl/readMESH.h>
+#include <tuple>
 
 #include "writer.hpp"
 #include "fem_solve.hpp"
 
 double f_lshape(double x, double y) {
+	std::ignore = x;
+	std::ignore = y;
     return 0;
 }
 

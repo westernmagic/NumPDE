@@ -2,7 +2,7 @@
 #include <Eigen/Core>
 #include <cassert>
 #include <stdexcept>
-
+#include <tuple>
 
 //! The gradient of the shape function (on the reference element)
 //! 
@@ -13,6 +13,8 @@
 //! @param y y coordinate in the reference element.
 inline Eigen::Vector2d gradientLambda(const int i, double x, double y) {
 	// (write your solution here)
+	std::ignore = x;
+	std::ignore = y;
 	assert(0 <= i && i <= 2);
 	switch(i) {
 		case 0:

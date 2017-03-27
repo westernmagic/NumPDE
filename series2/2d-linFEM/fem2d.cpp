@@ -3,11 +3,14 @@
 #include "fem_solve.hpp"
 #include "writer.hpp"
 #include <sstream>
+#include <tuple>
 #include "Lshape.hpp"
 #include "convergence.hpp"
 
 // constant sigma
 double sigma(double x, double y){
+	std::ignore = x;
+	std::ignore = y;
   return 1.0;
 }
 
@@ -17,6 +20,8 @@ double f_square(double x, double y) {
 }
 
 double g_square(double x, double y) {
+	std::ignore = x;
+	std::ignore = y;
     return 0;
 }
 
