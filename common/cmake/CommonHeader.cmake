@@ -37,7 +37,7 @@ if (OPENMP_FOUND)
 endif (OPENMP_FOUND)
 
 if (MVSC)
-        # So that Visual Studio will define M_PI
-        add_definitions (-D_USE_MATH_DEFINES)
+	# So that Visual Studio will define M_PI
+	add_definitions (-D_USE_MATH_DEFINES)
 endif (MVSC)
 
