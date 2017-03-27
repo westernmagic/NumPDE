@@ -41,15 +41,16 @@ TEST(TestDirichletBoundary, FourTrianglesOneInteriorPoint) {
         1, 1, 0;
 
 
-    //
-    // Should look like this:
-    //       4
-    //      /|\
-    //     / | \
-    //  0 +--2--+ 3
-    //     \ | /
-    //      \|/
-    //       1
+    /*
+    Should look like this:
+          4
+         /|\
+        / | \
+     0 +--2--+ 3
+        \ | /
+         \|/
+          1
+    */
     Eigen::MatrixXi triangles(4, 3);
     triangles << 0, 1, 2,
         1, 3, 2,
