@@ -25,6 +25,7 @@ addons:
         packages: &global_apt_packages
             - cmake
             - cmake-data
+    srcclr: true
 
 matrix:
     include:
