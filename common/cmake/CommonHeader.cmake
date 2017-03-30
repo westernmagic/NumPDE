@@ -30,7 +30,7 @@ include_directories (${PROJECT_ROOT_DIR}/common/include)
 set (CMAKE_SKIP_INSTALL_RULES TRUE)
 
 include (CheckCXXCompilerFlag)
-if (MVSC)
+if (MSVC)
 	foreach (i IN ITEMS /W4 /W44640)
 		message (STATUS "Checking compiler support for ${i}")
 		check_cxx_compiler_flag (${i} SUPPORTS_i)
@@ -53,6 +53,7 @@ else ()
 		else ()
 			message (STATUS "Checking compiler support for ${i} - Failed")
 		endif ()
+		unset (SUPPORTS_i)
 	endforeach ()
 endif ()
 
@@ -63,8 +64,8 @@ if (OPENMP_FOUND)
 	list (APPEND CMAKE_FORTRAN_FLAGS ${OpenMP_Fortran_FLAGS})
 endif (OPENMP_FOUND)
 
-if (MVSC)
+if (MSVC)
 	# So that Visual Studio will define M_PI
 	add_definitions (-D_USE_MATH_DEFINES)
-endif (MVSC)
+endif (MSVC)
 
