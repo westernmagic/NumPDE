@@ -14,18 +14,18 @@
 template <class T>
 void printToStream(std::ostream &out, const T &in) {
 	switch (std::fpclassify(static_cast<decltype(in + float(0))>(in))) {
-	FP_INFINITE:
-		out << "Inf";
-		break;
-	FP_NAN:
-		out << "NaN";
-		break;
-	FP_ZERO:
-	FP_SUBNORMAL:
-	FP_NORMAL:
-	default:
-		out << in;
-		break;
+		case FP_INFINITE:
+			out << "Inf";
+			break;
+		case FP_NAN:
+			out << "NaN";
+			break;
+		case FP_ZERO:
+		case FP_SUBNORMAL:
+		case FP_NORMAL:
+		default:
+			out << in;
+			break;
 	}
 }
 
