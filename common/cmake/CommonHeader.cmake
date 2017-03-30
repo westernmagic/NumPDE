@@ -31,7 +31,7 @@ set (CMAKE_SKIP_INSTALL_RULES TRUE)
 
 include (CheckCXXCompilerFlag)
 if (MSVC)
-	foreach (i IN ITEMS /W4 /W44640)
+	foreach (i IN ITEMS /W4 /w44640)
 		message (STATUS "Checking compiler support for ${i}")
 		check_cxx_compiler_flag (${i} SUPPORTS_i)
 
