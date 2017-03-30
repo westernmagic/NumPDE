@@ -8,6 +8,10 @@ if (NOT EXISTS ${GTEST_ROOT})
 	file (RENAME ${CMAKE_BINARY_DIR}/googletest-master ${PROJECT_ROOT_DIR}/external/googletest)
 endif (NOT EXISTS ${GTEST_ROOT})
 
+# Prevent overriding the parent project's compiler/linker
+# settings on Windows
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
 add_subdirectory (${GTEST_ROOT} googletest)
 set_property (TARGET gtest      PROPERTY EXCLUDE_FROM_ALL TRUE)
 set_property (TARGET gtest_main PROPERTY EXCLUDE_FROM_ALL TRUE)
