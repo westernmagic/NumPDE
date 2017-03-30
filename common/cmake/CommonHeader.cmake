@@ -43,7 +43,7 @@ if (MSVC)
 		endif ()
 	endforeach ()
 else ()
-	foreach (i IN ITEMS -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -Weffc++)
+	foreach (i IN ITEMS -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
 		message (STATUS "Checking compiler support for ${i}")
 		check_cxx_compiler_flag (${i} SUPPORTS_i)
 
