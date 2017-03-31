@@ -29,8 +29,8 @@ void assembleLoadVector(Eigen::VectorXd &      F,
 		Eigen::Vector3d elementVector;
 		computeLoadVector(elementVector, a, b, c, f);
 
-		for (int i = 0; i < 3; ++i) {
-			F(indexSet(i)) += elementVector(i);
+		for (int j = 0; j < 3; ++j) {
+			F(indexSet(j)) += elementVector(j);
 		}
 	}
 	//// NPDE_END_TEMPLATE
