@@ -11,7 +11,7 @@ before_build:
 
 build_script:
     - cd build
-    - cmake ..
+    - cmake -A x64 ..
     - cmake --build . --config $(configuration)
 
 test_script:
