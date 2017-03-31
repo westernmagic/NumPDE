@@ -12,8 +12,8 @@ before_build:
 build_script:
     - cd build
     - cmake ..
-    - cmake --build .
+    - cmake --build . --config $(configuration)
 
 test_script:
-    - ctest
+    - ctest . --config $(configuration)
 
