@@ -11,9 +11,9 @@ before_build:
 
 build_script:
     - cd build
-    - cmake -A %platform% ..
-    - cmake --build . --config %configuration%
+    - cmake -A %PLATFORM% ..
+    - cmake --build . --config %CONFIGURATION%
 
 test_script:
-    - ctest . --config %configuration%
+    - ctest . --config %CONFIGURATION%
 
