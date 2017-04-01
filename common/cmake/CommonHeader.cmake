@@ -1,6 +1,8 @@
 set (CMAKE_CXX_STANDARD 11)
 set (CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
+set (PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../..)
+
 # adapted from
 # https://github.com/RLovelett/eigen/blob/master/CMakeLists.txt
 
@@ -22,8 +24,6 @@ if (    NOT cmake_build_type_tolower STREQUAL "debug"
 endif ()
 
 
-set (PROJECT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../..)
-
 include_directories (${PROJECT_ROOT_DIR}/common/include)
 
 # Don't make any install rules
@@ -31,31 +31,26 @@ set (CMAKE_SKIP_INSTALL_RULES TRUE)
 
 include (CheckCXXCompilerFlag)
 if (MSVC)
-	foreach (i IN ITEMS /W4 /w44640)
-		message (STATUS "Checking compiler support for ${i}")
-		check_cxx_compiler_flag (${i} SUPPORTS_i)
-
-		if (SUPPORTS_i)
-			message (STATUS "Checking compiler support for ${i} - Success")
-			add_compile_options (${i})
-		else ()
-			message (STATUS "Checking compiler support for ${i} - Failed")
-		endif ()
-	endforeach ()
+	list (APPEND COMPILER_FLAGS_TO_CHECK /W4 /w44640)
 else ()
-	foreach (i IN ITEMS -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
-		message (STATUS "Checking compiler support for ${i}")
-		check_cxx_compiler_flag (${i} SUPPORTS_i)
-
-		if (SUPPORTS_i)
-			message (STATUS "Checking compiler support for ${i} - Success")
-			add_compile_options (${i})
-		else ()
-			message (STATUS "Checking compiler support for ${i} - Failed")
-		endif ()
-		unset (SUPPORTS_i)
-	endforeach ()
+	list (APPEND COMPILER_FLAGS_TO_CHECK -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic)
+	if (cmake_build_type_tolower STREQUAL "debug")
+		list (APPEND COMPILER_FLAGS_TO_CHECK -g -O0 --coverage)
+		link_libraries (--coverage)
+	endif (cmake_build_type_tolower STREQUAL "debug")
 endif ()
+
+foreach (i IN LISTS COMPILER_FLAGS_TO_CHECK)
+	message (STATUS "Checking compiler support for ${i}")
+	check_cxx_compiler_flag (${i} SUPPORTS_i)
+
+	if (SUPPORTS_i)
+		message (STATUS "Checking compiler support for ${i} - Success")
+		add_compile_options (${i})
+	else ()
+		message (STATUS "Checking compiler support for ${i} - Failed")
+	endif ()
+endforeach ()
 
 find_package (OpenMP)
 if (OPENMP_FOUND)
