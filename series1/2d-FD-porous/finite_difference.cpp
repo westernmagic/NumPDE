@@ -6,6 +6,7 @@
 #include <iostream>
 #include <iostream>
 #include <stdexcept>
+#include <tuple>
 
 //! Sparse Matrix type. Makes using this type easier.
 typedef Eigen::SparseMatrix<double> SparseMatrix;
@@ -188,9 +189,12 @@ int main(int, char **) {
 	};
 
 	auto sigmaConstant = [](double x, double y) {
+		std::ignore = x;
+		std::ignore = y;
 		return 1.0;
 	};
-	auto u = poissonSolve(F, sigmaCos, 500);
+	std::ignore = sigmaConstant;
+	auto u      = poissonSolve(F, sigmaCos, 500);
 	//auto u = poissonSolve(F, sigmaConstant, 500);
 	writeToFile("u_fd.txt", u);
 

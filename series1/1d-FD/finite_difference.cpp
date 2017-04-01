@@ -141,7 +141,7 @@ void poissonConvergence(std::vector<double> &errors,
 	errors.resize(endK - startK);
 	resolutions.resize(errors.size());
 	for (int k = startK; k < endK; ++k) {
-		const int N = 1 << k - 1;
+		const int N = 1 << (k - 1);
 		// compute the solution and the error
 		// (write your solution here)
 		resolutions[k - startK] = N;

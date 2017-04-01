@@ -35,7 +35,7 @@ void computeLoadVector(Vector &     loadVector,
 	// (write your solution here)
 	loadVector.resize(3);
 
-	auto PhiK = [&](const Eigen::Vector2d& x) -> Eigen::Vector2d {
+	auto PhiK = [&](const Eigen::Vector2d &x) -> Eigen::Vector2d {
 		return coordinateTransform * x + a.transpose();
 	};
 
