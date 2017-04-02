@@ -1,10 +1,12 @@
+dist: trusty
 language: cpp
 sudo: false
 
+git:
+    depth: 5
+
 cache:
     apt: true
-    directories:
-        - external
 
 before_install:
     - eval "${MATRIX_EVAL}"
@@ -53,4 +55,25 @@ matrix:
                       - clang-3.9
         - os: osx
           osx_image: xcode8.2
+        - os: linux
+          compiler: gcc
+          env: MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+          script: true
+          addons:
+              apt:
+                  sources:
+                      - *global_apt_sources
+                      - ubuntu-toolchain-r-test
+                  packages:
+                      - *global_apt_packages
+                      - g++-6
+              coverity_scan:
+                  project:
+                      name: westernmagic/NumPDE
+                      version: 1.0
+                      description: NumPDE FS17 excercises
+                  notification_email: mswoj61@gmail.com
+                  build_command_prepend: cd build && cov-configure --comptype gcc --compiler ${CC} --template && cmake ..
+                  build_command: cmake --build .
+                  branch_pattern: master
 
