@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/westernmagic/NumPDE.svg?branch=master)](https://travis-ci.org/westernmagic/NumPDE)
-[![Build status](https://ci.appveyor.com/api/projects/status/1qr8140lmrcfdg9x/branch/master?svg=true)](https://ci.appveyor.com/project/westernmagic/numpde/branch/master)
+[![Travis branch](https://img.shields.io/travis/westernmagic/NumPDE/master.svg)](https://travis-ci.org/westernmagic/NumPDE)
+[![AppVeyor branch](https://img.shields.io/appveyor/ci/westernmagic/NumPDE/master.svg)](https://ci.appveyor.com/project/westernmagic/numpde/branch/master)
+[![Coverity Scan](https://img.shields.io/coverity/scan/12234.svg)](https://scan.coverity.com/projects/westernmagic-numpde)
 # NumPDE FS 2017
 
 ## Cloning
