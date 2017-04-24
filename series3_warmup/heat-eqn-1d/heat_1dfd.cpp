@@ -19,7 +19,21 @@ typedef Eigen::VectorXd Vector;
 //! @param[out] A will contain the Poisson matrix
 //! @param[in] N the number of interior points
 void createPoissonMatrix(SparseMatrix& A, int N) {
-// (write your solution here)
+    A.resize(N, N);
+    double h=1./(N+1);
+    std::vector<Triplet> triplets;
+    triplets.reserve(N + 2 * N - 2);
+    for (int i = 0; i < N; ++i) {
+        triplets.push_back(Triplet(i, i, 2./(h*h)));
+        if (i > 0) {
+            triplets.push_back(Triplet(i, i - 1, -1./(h*h)));
+        }
+        if (i < N - 1){
+            triplets.push_back(Triplet(i, i + 1, -1./(h*h)));
+        }
+    }
+
+    A.setFromTriplets(triplets.begin(), triplets.end());
 }
 
 /// Uses the explicit Euler method to compute u from time 0 to time T 
@@ -42,8 +56,23 @@ void explicitEuler(Eigen::MatrixXd & u, Vector & time,
     const double h=1./(N+1);
     u.resize(N,nsteps+1);
     time.resize(nsteps+1);
+    /* Initialize A */
+    SparseMatrix A;
+    createPoissonMatrix(A,N);
+    /* Initialize u */
+    u.col(0)<<u0;
+    time[0]=0.;
+    Vector G;
+    G.resize(N);
+    G.setZero();
+    for(unsigned k=0; k<nsteps; k++)
+    {
+        G[0] = dt*gL(time[k])/(h*h);
+        G[N-1] = dt*gR(time[k])/(h*h);
 
-// (write your solution here)
+        u.col(k+1)=u.col(k)-dt*A*u.col(k)+G;
+        time[k+1]=(k+1)*dt;
+    }
 }
 
 /// Uses the Crank-Nicolson method to compute u from time 0 to time T 
@@ -62,7 +91,40 @@ void CrankNicolson(Eigen::MatrixXd & u, Vector & time,
                    const Vector u0, double dt, double T, int N,
                    const std::function<double(double)>& gL,
                    const std::function<double(double)>& gR) {
-// (write your solution here)
+    const unsigned int nsteps = round(T/dt);
+    const double h=1./(N+1);
+    u.resize(N,nsteps+1);
+    time.resize(nsteps+1);
+    /* Initialize A */
+    SparseMatrix A;
+    createPoissonMatrix(A,N);
+    SparseMatrix B(N,N);
+    B.setIdentity();
+    B+=dt/2.*A;
+    /* Initialize u */
+    u.col(0)<<u0;
+    time[0]=0.;
+    /* Initialize solver and compute Cholesky decomposition of B (Note: since dt is constant, the matrix B is the same for all timesteps)*/
+    Eigen::SimplicialLDLT<SparseMatrix> solver;
+    solver.compute(B);
+    Vector G1,G2;
+    G1.resize(N);
+    G1.setZero();
+    G2.resize(N);
+    G2.setZero();
+    for(unsigned k=0; k<nsteps; k++)
+    {
+        time[k+1]=(k+1)*dt;
+        G1[0] = dt*gL(time[k])/(h*h);
+        G1[N-1] = dt*gR(time[k])/(h*h);
+
+        G2[0] = dt*gL(time[k+1])/(h*h);
+        G2[N-1] = dt*gR(time[k+1])/(h*h);
+
+        u.col(k+1)=solver.solve(u.col(k)-dt/2*A*u.col(k)
+				+0.5*(G1+G2));
+
+    }
 }
 
 double U0(double x) {
