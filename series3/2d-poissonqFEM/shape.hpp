@@ -1,4 +1,6 @@
 #pragma once
+#include <cassert>
+#include <stdexcept>
 
 //! The shape function (on the reference element) for LINEAR FEM.
 //!
@@ -37,8 +39,25 @@ inline double lambda(int i, double x, double y) {
 //! @param x x coordinate in the reference element.
 //! @param y y coordinate in the reference element.
 inline double shapefun(int i, double x, double y) {
-	double value = 0.0;
+	// double value = 0.0;
 	// (write your solution here)
-	return value;
+	assert(0 <= i && i <= 5);
+	switch (i) {
+		case 0:
+			return (2 * lambda(0, x, y) - 1) * lambda(0, x, y);
+		case 1:
+			return (2 * lambda(1, x, y) - 1) * lambda(1, x, y);
+		case 2:
+			return (2 * lambda(2, x, y) - 1) * lambda(2, x, y);
+		case 3:
+			return 4 * lambda(0, x, y) * lambda(1, x, y);
+		case 4:
+			return 4 * lambda(1, x, y) * lambda(2, x, y);
+		case 5:
+			return 4 * lambda(0, x, y) * lambda(2, x, y);
+		default:
+			throw std::domain_error("i not in {0,1,2,3,4,5}");
+	}
+	// return value;
 }
 //----------------shapefunEnd----------------
