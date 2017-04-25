@@ -5,6 +5,7 @@
 #include "stiffness_matrix_assembly.hpp"
 #include <Eigen/Core>
 #include <igl/slice.h>
+#include <igl/slice_into.h>
 #include <string>
 
 typedef Eigen::VectorXd Vector;
@@ -28,9 +29,11 @@ int solveFiniteElement(Vector &     u,
 
 	SparseMatrix A;
 	// (write your solution here)
+	assembleStiffnessMatrix(A, vertices, qdof, N);
 
 	Vector F;
 	// (write your solution here)
+	assembleLoadVector(F, vertices, qdof, N, f);
 
 	u.resize(N);
 	u.setZero();
@@ -50,9 +53,16 @@ int solveFiniteElement(Vector &     u,
 
 	//initialize solver for AInterior
 	// (write your solution here)
+	solver.compute(AInterior);
+
+	if (solver.info() != Eigen::Success) {
+		throw std::runtime_error("Could not decompose the matrix");
+	}
 
 	//solve interior system
 	// (write your solution here)
+	Vector uInterior = solver.solve(FInterior);
+	igl::slice_into(uInterior, interiorDofs, u);
 
 	return interiorDofs.size();
 }
