@@ -33,13 +33,13 @@ inline Eigen::Vector2d gradientShapefun(const int i, double x, double y) {
 		case 1:
 			return Eigen::Vector2d(4 * x - 1, 0);
 		case 2:
-			return Eigen::Vector2d(0, 4 * x - 1);
+			return Eigen::Vector2d(0, 4 * y - 1);
 		case 3:
 			return Eigen::Vector2d(4 - 8 * x - 4 * y, -4 * x);
 		case 4:
 			return Eigen::Vector2d(4 * y, 4 * x);
 		case 5:
-			return Eigen::Vector2d(-4 * y, 4 - 4 * x - 8 * x);
+			return Eigen::Vector2d(-4 * y, 4 - 4 * x - 8 * y);
 		default:
 			throw std::domain_error("i not in {0,1,2,3,4,5}");
 	}
