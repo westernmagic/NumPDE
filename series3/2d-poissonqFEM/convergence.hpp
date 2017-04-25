@@ -51,12 +51,15 @@ void convergenceAnalysis(const std::string &baseMeshName, int maxLevel, const st
 		std::cout << "Computing convergence. At: " << basename << std::endl;
 		// solve finite element system
 		// (write your solution here)
+		numberOfDegreesOfFreedom.push_back(solveFiniteElement(u, quadraticDofs, f));
 
 		//compute L2-error and save it in the corresponding vector
 		// (write your solution here)
+		differences_L2.push_back(computeL2Difference(vertices, dofs, u, exactSol));
 
 		//compute H1-error and save it in the corresponding vector
 		// (write your solution here)
+		differences_H1.push_back(computeH1Difference(vertices, dofs, u, exactSol_grad));
 
 		// store number of dofs in vector
 		// (write your solution here)
