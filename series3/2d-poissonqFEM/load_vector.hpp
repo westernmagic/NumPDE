@@ -33,5 +33,16 @@ void computeLoadVector(Vector &     loadVector,
 	Eigen::Matrix2d coordinateTransform = makeCoordinateTransform(b - a, c - a);
 	double          volumeFactor        = std::abs(coordinateTransform.determinant());
 	// (write your solution here)
+	loadVector.resize(6);
+
+	for (int i = 0; i < 6; ++i) {
+		auto ff = [&](double x, double y) -> double {
+			Eigen::Vector2d transformedPoint = coordinateTransform * Eigen::Vector2d(x, y) + a.transpose();
+
+			return f(transformedPoint.x(), transformedPoint.y()) * shapefun(i, x, y) * volumeFactor;
+		};
+
+		loadVector(i) = integrate(ff);
+	}
 }
 //----------------compVectorEnd----------------
