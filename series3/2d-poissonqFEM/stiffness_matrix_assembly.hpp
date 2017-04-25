@@ -27,6 +27,23 @@ void assembleStiffnessMatrix(Matrix &A, const Eigen::MatrixXd &vertices, const E
 
 	triplets.reserve(numberOfElements * 6 * 10);
 	// (write your solution here)
+	for (int i = 0; i < numberOfElements; ++i) {
+		auto &indexSet = dofs.row(i);
+
+		const auto &a = vertices.row(indexSet(0));
+		const auto &b = vertices.row(indexSet(1));
+		const auto &c = vertices.row(indexSet(2));
+
+		Eigen::MatrixXd stiffnessMatrix;
+		computeStiffnessMatrix(stiffnessMatrix, a, b, c);
+
+		for (int n = 0; n < 6; ++n) {
+			for (int m = 0; m < 6; ++m) {
+				auto triplet = Triplet(indexSet(n), indexSet(m), stiffnessMatrix(n, m));
+				triplets.push_back(triplet);
+			}
+		}
+	}
 	A.setFromTriplets(triplets.begin(), triplets.end());
 }
 //----------------AssembleMatrixEnd----------------
