@@ -24,8 +24,25 @@ inline Eigen::Vector2d gradientLambda(const int i, double x, double y) {
 //! @param x x coordinate in the reference element.
 //! @param y y coordinate in the reference element.
 inline Eigen::Vector2d gradientShapefun(const int i, double x, double y) {
-	Eigen::Vector2d value;
+	// Eigen::Vector2d value;
 	// (write your solution here)
-	return value;
+	assert(0 <= i && i <= 5);
+	switch (i) {
+		case 0:
+			return Eigen::Vector2d(-3 +4*x +4*y, -3 +4*x + 4*y);
+		case 1:
+			return Eigen::Vector2d(4*x -1, 0);
+		case 2:
+			return Eigen::Vector2d(0, 4*x -1);
+		case 3:
+			return Eigen::Vector2d(4 -8*x -4*y, -4*x);
+		case 4:
+			return Eigen::Vector2d(4*y, 4*x);
+		case 5:
+			return Eigen::Vector2d(-4*y, 4 -4*x -8*x);
+		default:
+			throw std::domain_error("i not in {0,1,2,3,4,5}");
+	}
+	//return value;
 }
 //----------------gradshapefunEnd----------------
