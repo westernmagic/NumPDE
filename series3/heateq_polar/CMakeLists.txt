@@ -1,21 +1,3 @@
-# Mandatory information that CMAKE needs
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6.0)
+add_executable (heateq_polar heateq_polar.cpp)
+target_link_libraries (heateq_polar Eigen3::Eigen)
 
-# Project name
-PROJECT (2d_fd_porous)
-INCLUDE("cmake/CommonHeader.cmake")
-INCLUDE("cmake/Compiler.cmake")
-# So that Visual Studio will define M_PI
-ADD_DEFINITIONS(-D_USE_MATH_DEFINES)
-
-INCLUDE_DIRECTORIES(".")
-INCLUDE_DIRECTORIES("..")
-INCLUDE("cmake/GetEigen.cmake")
-
-
-INCLUDE_DIRECTORIES(".")
-INCLUDE_DIRECTORIES("..")
-
-SET(SRC_FD "heateq_polar.cpp") # Source
-ADD_EXECUTABLE(heateq_polar ${SRC_FD}) 
-ADD_DEPENDENCIES(heateq_polar Eigen)
