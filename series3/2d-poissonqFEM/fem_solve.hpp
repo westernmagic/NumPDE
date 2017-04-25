@@ -4,6 +4,7 @@
 #include "load_vector_assembly.hpp"
 #include "stiffness_matrix_assembly.hpp"
 #include <Eigen/Core>
+#include <igl/slice.h>
 #include <string>
 
 typedef Eigen::VectorXd Vector;

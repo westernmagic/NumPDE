@@ -5,6 +5,7 @@
 #include <Eigen/Core>
 #include <igl/edges.h>
 #include <igl/vertex_triangle_adjacency.h>
+#include <iostream>
 #include <set>
 
 class QDofs {
