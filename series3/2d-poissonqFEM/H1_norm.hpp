@@ -1,7 +1,7 @@
 #pragma once
 #include "coordinate_transform.hpp"
+#include "grad_shape.hpp"
 #include "integrate.hpp"
-#include "shape.hpp"
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <functional>
@@ -28,6 +28,19 @@ double computeH1Difference(const Eigen::MatrixXd &vertices,
 		Eigen::Matrix2d elementMap          = coordinateTransform.inverse().transpose();
 
 		// (write your solution here)
+		auto f = [&](double x, double y) -> double {
+			Eigen::Vector2d transformedPoint = coordinateTransform * Eigen::Vector2d(x, y) + a.transpose();
+
+			Eigen::Vector2d approximate_grad = Eigen::Vector2d(0, 0);
+			for (int j = 0; j < 6; ++j) {
+				approximate_grad += u1(idSet(j)) * elementMap * gradientShapefun(j, x, y);
+			}
+			Eigen::Vector2d diff = u2grad(transformedPoint.x(), transformedPoint.y()) - approximate_grad;
+
+			return diff.dot(diff) * volumeFactor;
+		};
+
+		error += integrate(f);
 	}
 
 	return std::sqrt(error);

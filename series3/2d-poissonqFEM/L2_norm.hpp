@@ -27,6 +27,20 @@ double computeL2Difference(const Eigen::MatrixXd &vertices,
 		auto volumeFactor        = std::abs(coordinateTransform.determinant());
 
 		// (write your solution here)
+		auto f = [&](double x, double y) -> double {
+			Eigen::Vector2d transformedPoint = coordinateTransform * Eigen::Vector2d(x, y) + a.transpose();
+
+			double approximateValue = 0;
+			for (int j = 0; j < 6; ++j) {
+				approximateValue += u1(idSet(j)) * shapefun(j, x, y);
+			}
+
+			double diff = u2(transformedPoint.x(), transformedPoint.y()) - approximateValue;
+
+			return diff * diff * volumeFactor;
+		};
+
+		error += integrate(f);
 	}
 
 	return std::sqrt(error);
