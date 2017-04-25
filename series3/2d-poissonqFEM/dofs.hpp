@@ -81,10 +81,10 @@ private:
 			auto tria_vertid0 = VFi[edgevert(0)];
 			auto tria_vertid1 = VFi[edgevert(1)];
 			// traverse elements connected to first vertex
-			for (int k0 = 0; k0 < tria_vert0.size(); k0++) {
+			for (unsigned int k0 = 0; k0 < tria_vert0.size(); k0++) {
 				auto tria0 = tria_vert0[k0];
 				// traverse elements connected to second element
-				for (int k1 = 0; k1 < tria_vert1.size(); k1++) {
+				for (unsigned int k1 = 0; k1 < tria_vert1.size(); k1++) {
 					auto tria1 = tria_vert1[k1];
 					// if the elements match, it means we have found a triangle
 					// that contains the current edge

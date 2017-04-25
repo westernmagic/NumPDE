@@ -7,6 +7,7 @@
 #include <igl/slice.h>
 #include <igl/slice_into.h>
 #include <string>
+#include <tuple>
 
 typedef Eigen::VectorXd Vector;
 
@@ -39,7 +40,11 @@ int solveFiniteElement(Vector &     u,
 	u.setZero();
 	Eigen::VectorXi interiorDofs;
 
-	auto zerobc = [](double x, double y) { return 0; };
+	auto zerobc = [](double x, double y) {
+		std::ignore = x;
+		std::ignore = y;
+		return 0;
+	};
 	// set homogeneous Dirichlet Boundary conditions
 	setDirichletBoundary(u, interiorDofs, quadraticDofs, zerobc);
 	F -= A * u;
