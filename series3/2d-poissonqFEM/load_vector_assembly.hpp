@@ -20,5 +20,19 @@ void assembleLoadVector(Eigen::VectorXd &      F,
 	F.resize(N);
 	F.setZero();
 	// (write your solution here)
+	for (int i = 0; i < numberOfElements; ++i) {
+		const auto &indexSet = dofs.row(i);
+
+		const auto &a = vertices.row(indexSet(0));
+		const auto &b = vertices.row(indexSet(1));
+		const auto &c = vertices.row(indexSet(2));
+
+		Eigen::VectorXd elementVector;
+		computeLoadVector(elementVector, a, b, c, f);
+
+		for (int j = 0; j < 6; ++j) {
+			F(indexSet(j)) += elementVector(j);
+		}
+	}
 }
 //----------------AssembleVectorEnd----------------
