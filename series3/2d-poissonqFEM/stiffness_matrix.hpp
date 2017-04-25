@@ -36,8 +36,8 @@ void computeStiffnessMatrix(MatrixType & stiffnessMatrix,
 	for (int i = 0; i < 6; ++i) {
 		for (int j = 0; j < 6; ++j) {
 			auto f = [&](double x, double y) -> double {
-				Eigen::Vector2d gradLambdaI = elementMap * gradientShapeFun(i, x, y);
-				Eigen::Vector2d gradLambdaJ = elementMap * gradientShapeFun(j, x, y);
+				Eigen::Vector2d gradLambdaI = elementMap * gradientShapefun(i, x, y);
+				Eigen::Vector2d gradLambdaJ = elementMap * gradientShapefun(j, x, y);
 
 				return gradLambdaI.dot(gradLambdaJ);
 			};
