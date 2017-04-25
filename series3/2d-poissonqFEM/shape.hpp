@@ -1,9 +1,9 @@
 #pragma once
 
 //! The shape function (on the reference element) for LINEAR FEM.
-//! 
+//!
 //! We have three shape functions.
-//! 
+//!
 //! lambda(0, x, y) should be 1 in the point (0,0) and zero in (1,0) and (0,1)
 //! lambda(1, x, y) should be 1 in the point (1,0) and zero in (0,0) and (0,1)
 //! lambda(2, x, y) should be 1 in the point (0,1) and zero in (0,0) and (1,0)
@@ -12,20 +12,20 @@
 //! @param x x coordinate in the reference element.
 //! @param y y coordinate in the reference element.
 inline double lambda(int i, double x, double y) {
-    if (i == 0) {
-        return 1 - x - y;
-    } else if (i == 1) {
-        return x;
-    } else {
-        return y;
-    }
+	if (i == 0) {
+		return 1 - x - y;
+	} else if (i == 1) {
+		return x;
+	} else {
+		return y;
+	}
 }
 
 //----------------shapefunBegin----------------
 //! The shape function (on the reference element) for QUADRATIC FEM
-//! 
+//!
 //! We have six shape functions.
-//! 
+//!
 //! shapefun(0, x, y) should be 1 in the point (0,0) and zero in the other 5
 //! shapefun(1, x, y) should be 1 in the point (1,0) and zero in the other 5
 //! shapefun(2, x, y) should be 1 in the point (0,1) and zero in the other 5
@@ -37,8 +37,8 @@ inline double lambda(int i, double x, double y) {
 //! @param x x coordinate in the reference element.
 //! @param y y coordinate in the reference element.
 inline double shapefun(int i, double x, double y) {
-  double value = 0.0;
-// (write your solution here)
-  return value;
+	double value = 0.0;
+	// (write your solution here)
+	return value;
 }
 //----------------shapefunEnd----------------
