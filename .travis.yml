@@ -75,5 +75,5 @@ matrix:
                   notification_email: mswoj61@gmail.com
                   build_command_prepend: cd build && cov-configure --comptype gcc --compiler ${CC} --template && cmake ..
                   build_command: cmake --build .
-                  branch_pattern: travis
+                  branch_pattern: master
 

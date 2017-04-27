@@ -39,10 +39,16 @@ void computeStiffnessMatrix(MatrixType & stiffnessMatrix,
 	// (write your solution here)
 	stiffnessMatrix.resize(3, 3);
 
+	auto PhiK = [&](const Eigen::Vector2d &x) -> Eigen::Vector2d {
+		return coordinateTransform * x + a.transpose();
+	};
+
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
 			auto f = [&](double x, double y) -> double {
-				return (sigma(x, y) * (elementMap * gradientLambda(i, x, y)).dot(elementMap * gradientLambda(j, x, y)) + r * lambda(i, x, y) * lambda(j, x, y)) * volumeFactor;
+				Eigen::Vector2d transformedPoint = PhiK(Eigen::Vector2d(x,y));
+
+				return (sigma(transformedPoint.x(), transformedPoint.y()) * (elementMap * gradientLambda(i, x, y)).dot(elementMap * gradientLambda(j, x, y)) + r * lambda(i, x, y) * lambda(j, x, y)) * volumeFactor;
 			};
 			stiffnessMatrix(i, j) = integrate(f);
 		}
