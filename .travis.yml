@@ -49,7 +49,7 @@ matrix:
                   sources:
                       - *global_apt_sources
                       - ubuntu-toolchain-r-test
-                      - llvm-toolchain-precise-3.9
+                      - llvm-toolchain-trusty-4.0
                   packages:
                       - *global_apt_packages
                       - clang-4.0
