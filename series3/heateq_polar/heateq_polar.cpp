@@ -2,6 +2,7 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <iostream>
+#include <utility>
 
 //----------------stepBegin----------------
 //! Does one Forward-Euler timestep of the heat equation
@@ -60,12 +61,19 @@ Eigen::VectorXd solveHeatEquation(const std::function<double(double)> &initialDa
 	double dr = 1.0 / N;
 	double dt = cfl * dr * dr;
 
+	for (int i = 0; i < u.size() - 1; ++i) {
+		u(i) = initialData(i * dr);
+	}
+
 	while (!shouldStop(u, t)) {
 		// make one step forward.
 		// Make sure you swap u and uPrevious
 		// accordingly!
 		// And update the current time
 		// (write your solution here)
+		std::swap(u, uPrevious);
+		t += dt;
+		stepHeatEquation(u, uPrevious, dr, dt);
 	}
 	// Return the final solution
 	return u;
