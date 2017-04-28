@@ -15,6 +15,11 @@ void stepHeatEquation(Eigen::VectorXd &      u,
                       const double           dr,
                       const double           dt) {
 	// (write your solution here)
+	u(0) = uPrevious(0);
+	for (int i = 1; i < u.size() - 1; ++i) {
+		u(i+1) = uPrevious(i) + dt / (dr * dr) * ( (i+1) * uPrevious(i+1) - 2 * i * uPrevious(i) + (i-1) * uPrevious(i-1) ) / i;
+	}
+	u(u.size() - 1) = 0;
 }
 //----------------stepEnd----------------
 
