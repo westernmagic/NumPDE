@@ -3,6 +3,7 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include <utility>
+#include <tuple>
 
 //----------------stepBegin----------------
 //! Does one Forward-Euler timestep of the heat equation
@@ -81,6 +82,7 @@ Eigen::VectorXd solveHeatEquation(const std::function<double(double)> &initialDa
 //----------------solveEnd----------------
 
 bool stopAtTimeOne(const Eigen::VectorXd &u, double t) {
+	std::ignore = u;
 	return t > 1;
 }
 
