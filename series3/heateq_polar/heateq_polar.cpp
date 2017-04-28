@@ -137,6 +137,16 @@ int main(int, char **) {
 
 	//----------------maxstopBegin----------------
 	// (write your solution here)
+	auto stopMax4 = [](const Eigen::VectorXd &u, double t) -> bool {
+		if (u.maxCoeff() <= 4.0) {
+			std::cout << "Max 4 reached after time t = " << t << std::endl;
+			return true;
+		}
+
+		return false;
+	};
+
+	solveHeatEquation(initialData, stopMax4, 500, 0.5);
 	//----------------maxstopEnd----------------
 
 	convergenceStudy();
