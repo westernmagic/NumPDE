@@ -111,7 +111,7 @@ void convergenceStudy() {
 		double maxError = 0;
 
 		size_t ratioReference = (NReference + 2) / (N + 2);
-		for (size_t i = 0; i < u.rows(); ++i) {
+		for (int i = 0; i < u.rows(); ++i) {
 			maxError = std::max(maxError, std::abs(u[i] - uReference[i * ratioReference]));
 		}
 
