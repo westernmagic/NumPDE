@@ -2,8 +2,8 @@
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <iostream>
-#include <utility>
 #include <tuple>
+#include <utility>
 
 //----------------stepBegin----------------
 //! Does one Forward-Euler timestep of the heat equation
@@ -19,7 +19,7 @@ void stepHeatEquation(Eigen::VectorXd &      u,
 	// (write your solution here)
 	u(0) = uPrevious(0);
 	for (int i = 1; i < u.size() - 1; ++i) {
-		u(i+1) = uPrevious(i) + dt / (dr * dr) * ( (i+1) * uPrevious(i+1) - 2 * i * uPrevious(i) + (i-1) * uPrevious(i-1) ) / i;
+		u(i + 1) = uPrevious(i) + dt / (dr * dr) * ((i + 1) * uPrevious(i + 1) - 2 * i * uPrevious(i) + (i - 1) * uPrevious(i - 1)) / i;
 	}
 	u(u.size() - 1) = 0;
 }
