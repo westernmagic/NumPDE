@@ -59,7 +59,7 @@ Eigen::VectorXd solveHeatEquation(const std::function<double(double)> &initialDa
 
 	double t = 0;
 
-	double dr = 1.0 / N;
+	double dr = 1.0 / (N + 1);
 	double dt = cfl * dr * dr;
 
 	for (int i = 0; i < u.size() - 1; ++i) {
