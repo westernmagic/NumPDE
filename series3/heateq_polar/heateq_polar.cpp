@@ -17,6 +17,7 @@ void stepHeatEquation(Eigen::VectorXd &      u,
                       const double           dr,
                       const double           dt) {
 	// (write your solution here)
+	#pragma omp parallel for if(u.size() > 10000)
 	for (int i = 1; i < u.size() - 1; ++i) {
 		u(i) = uPrevious(i) + dt / (dr * dr) * ((i + 0.5) * dr * uPrevious(i + 1) - 2 * i * dr * uPrevious(i) + (i - 0.5) * dr * uPrevious(i - 1)) / (i * dr);
 	}
