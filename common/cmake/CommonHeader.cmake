@@ -28,6 +28,7 @@ include_directories (${PROJECT_ROOT_DIR}/common/include)
 
 # Don't make any install rules
 set (CMAKE_SKIP_INSTALL_RULES TRUE)
+set (CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
 include (CheckCXXCompilerFlag)
 if (MSVC)
