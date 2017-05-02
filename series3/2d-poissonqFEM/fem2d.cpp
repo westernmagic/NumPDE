@@ -39,9 +39,9 @@ int main(int, char **) {
 		QDofs quadraticDofs(vertices, triangles);
 		solveFiniteElement(u, quadraticDofs, f_square);
 
-		writeToFile("square_5_values.txt", u.segment(0, vertices.rows()));
-		writeMatrixToFile("square_5_vertices.txt", vertices);
-		writeMatrixToFile("square_5_triangles.txt", triangles);
+		writeToFile("square_values.txt", u.segment(0, vertices.rows()));
+		writeMatrixToFile("square_vertices.txt", vertices);
+		writeMatrixToFile("square_triangles.txt", triangles);
 
 		convergenceAnalysis("square", 7, f_square, uex_square, uex_grad_square);
 
