@@ -12,4 +12,5 @@ add_subdirectory (series2_warmup)
 add_subdirectory (series2)
 add_subdirectory (series3)
 add_subdirectory (series3_warmup)
+add_subdirectory (series4)
 
