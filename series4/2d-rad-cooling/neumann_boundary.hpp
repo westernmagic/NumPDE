@@ -13,4 +13,15 @@ void computeBoundaryMatrix(MatrixType & boundaryMatrix,
                            const Point &b,
                            double       gamma) {
 	// (write your solution here)
+	boundaryMatrix.resize(2, 2);
+
+	for (int i = 0; i < 2; ++i) {
+		for (int j = 0; j < 2; ++j) {
+			auto f = [&](double t) -> double {
+				return lambda(i, (1 + t) / 2, 0) * lambda(j, (1 - t) / 2, 0);
+			};
+
+			boundaryMatrix(i, j) = integrate1d(f);
+		}
+	}
 }
