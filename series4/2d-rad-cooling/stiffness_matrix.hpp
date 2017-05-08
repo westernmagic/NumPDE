@@ -34,5 +34,19 @@ void computeStiffnessMatrix(MatrixType & stiffnessMatrix,
 
 	Eigen::Matrix2d elementMap = coordinateTransform.inverse().transpose();
 	// (write your solution here)
+	stiffnessMatrix.resize(3, 3);
+
+	for (int i = 0; i < 3; ++i) {
+		for (int j = 0; j < 3; ++j) {
+			auto f = [&](double x, double y) -> double {
+				Eigen::Vector2d gradLambdaI = elementMap * gradientLambda(i, x, y);
+				Eigen::Vector2d gradLambdaJ = elementMap * gradientLambda(j, x, y);
+
+				return gradLambdaI.dot(gradLambdaJ);
+			};
+
+			stiffnessMatrix(i, j) = volumeFactor * integrate2d(f);
+		}
+	}
 }
 //----------------compMatrixEnd----------------
