@@ -21,6 +21,23 @@ SparseMatrix assembleMassMatrix(
 	SparseMatrix         M(vertices.rows(), vertices.rows());
 
 	// (write your solution here)
+	triplets.reserve(numberOfElements * 3 * 3);
+	for (int i = 0; i < numberOfElements; ++i) {
+		auto &indexSet = triangles.row(i);
+
+		const auto &a = vertices.row(indexSet(0));
+		const auto &b = vertices.row(indexSet(1));
+		const auto &c = vertices.row(indexSet(2));
+
+		Eigen::Matrix3d massMatrix;
+		computeMassMatrix(massMatrix, a, b, c);
+
+		for (int n = 0; n < 3; ++n) {
+			for (int m = 0; m < 3; ++m) {
+				triplets.emplace_back(indexSet(n), indexSet(m), massMatrix(n,m));
+			}
+		}
+	}
 
 	M.setFromTriplets(triplets.begin(), triplets.end());
 
