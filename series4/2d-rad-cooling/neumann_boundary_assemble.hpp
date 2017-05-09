@@ -20,6 +20,23 @@ SparseMatrix assembleBoundaryMatrix(
 	const int            numberOfElements = edges.rows();
 
 	// (write your solution here)
+	for (int i = 0; i < edges.size(); ++i) {
+		auto indexSet = edges.row(i);
+
+		const auto &a = vertices.row(indexSet(0));
+		const auto &b = vertices.row(indexSet(1));
+
+		Eigen::Matrix2d boundaryMatrix;
+		computeBoundaryMatrix(boundaryMatrix, a, b, gamma);
+
+		for (int n = 0; n < 2; ++n) {
+			for (int m = 0; m < 2; ++m) {
+				triplets.emplace_back(indexSet(n), indexSet(m), boundaryMatrix(n, m));
+			}
+		}
+	}
+
+
 	B.setFromTriplets(triplets.begin(), triplets.end());
 	return B;
 }
