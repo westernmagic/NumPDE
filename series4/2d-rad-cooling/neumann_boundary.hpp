@@ -22,7 +22,7 @@ void computeBoundaryMatrix(MatrixType & boundaryMatrix,
 			};
 
 			// TODO: why 1/2?
-			boundaryMatrix(i, j) = integrate1d(f) * gamma * (b-a).norm() / 2;
+			boundaryMatrix(i, j) = integrate1d(f) * gamma * (b - a).norm() / 2;
 		}
 	}
 }

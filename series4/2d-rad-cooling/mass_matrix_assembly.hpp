@@ -34,7 +34,7 @@ SparseMatrix assembleMassMatrix(
 
 		for (int n = 0; n < 3; ++n) {
 			for (int m = 0; m < 3; ++m) {
-				triplets.emplace_back(indexSet(n), indexSet(m), massMatrix(n,m));
+				triplets.emplace_back(indexSet(n), indexSet(m), massMatrix(n, m));
 			}
 		}
 	}

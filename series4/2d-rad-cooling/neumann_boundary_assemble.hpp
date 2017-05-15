@@ -36,7 +36,6 @@ SparseMatrix assembleBoundaryMatrix(
 		}
 	}
 
-
 	B.setFromTriplets(triplets.begin(), triplets.end());
 	return B;
 }

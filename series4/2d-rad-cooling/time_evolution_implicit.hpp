@@ -58,7 +58,7 @@ std::pair<Eigen::VectorXd, std::vector<double>> radiativeTimeEvolutionImplicit(c
 	};
 
 	auto solveY2 = [&](const Eigen::VectorXd &mu, const Eigen::VectorXd &Y1) -> Eigen::VectorXd {
-		return Solver.solve(M * mu - dt * (1-lambda) * A * Y1);
+		return Solver.solve(M * mu - dt * (1 - lambda) * A * Y1);
 	};
 
 	Eigen::SimplicialLDLT<SparseMatrix> SolverM;
@@ -75,7 +75,7 @@ std::pair<Eigen::VectorXd, std::vector<double>> radiativeTimeEvolutionImplicit(c
 		// (write your solution here)
 		Y1 = solveY1(u);
 		Y2 = solveY2(u, Y1);
-		u = SolverM.solve(M * u - dt * A * ( (1 - lambda) * Y1 + lambda * Y2)).eval();
+		u  = SolverM.solve(M * u - dt * A * ((1 - lambda) * Y1 + lambda * Y2)).eval();
 		// Compute the energy for this level
 		energy.push_back(u.sum() / u.rows());
 	}
