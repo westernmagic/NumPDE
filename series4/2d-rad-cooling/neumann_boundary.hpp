@@ -18,10 +18,11 @@ void computeBoundaryMatrix(MatrixType & boundaryMatrix,
 	for (int i = 0; i < 2; ++i) {
 		for (int j = 0; j < 2; ++j) {
 			auto f = [&](double t) -> double {
-				return lambda(i, (1 + t) / 2, 0) * lambda(j, (1 - t) / 2, 0);
+				return lambda(i, t / 2.0 + 1, 0) * lambda(j, t / 2.0 + 1, 0);
 			};
 
-			boundaryMatrix(i, j) = integrate1d(f) * gamma / (2 * (b-a).norm());
+			// TODO: why 1/2?
+			boundaryMatrix(i, j) = integrate1d(f) * gamma * (b-a).norm() / 2;
 		}
 	}
 }
