@@ -33,11 +33,23 @@ std::pair<Eigen::VectorXd, std::vector<double>> radiativeTimeEvolutionExplicit(c
 	Eigen::MatrixXi edges = getBoundaryEdges(vertices, triangles);
 
 	// Define the needed matrices and solvers
+	SparseMatrix M = assembleMassMatrix(vertices, triangles);
+	SparseMatrix A = assembleStiffnessMatrix(vertices, triangles);
+	SparseMatrix B = assembleBoundaryMatrix(vertices, edges, gamma);
+	A += B;
+
+	Eigen::SimplicialLDLT<SparseMatrix> SolverM;
+	SolverM.compute(M);
+
+	if (SolverM.info() != Eigen::Success) {
+		throw std::runtime_error("Could not decompose matrix M");
+	}
 
 	// (write your solution here)
 	for (int timestep = 0; timestep < m; ++timestep) {
 		// Step the solution forward in time
 		// (write your solution here)
+		u += SolverM.solve(-1.0 * dt * A * u).eval();
 
 		energy.push_back(u.sum() / u.rows());
 	}
