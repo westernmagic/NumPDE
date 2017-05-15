@@ -1,5 +1,6 @@
 #include "writer.hpp"
 #include <Eigen/Core>
+#include <algorithm>
 #include <cmath>
 #include <functional>
 #include <iostream>
@@ -25,6 +26,16 @@ void SimpleUpwindFD(Eigen::MatrixXd &u, Vector &time, const Vector u0, double dt
 	time.resize(nsteps + 1);
 
 	// (write your solution here)
+	u.col(0) = u0;
+	time(0)  = 0;
+	for (unsigned int t = 0; t < nsteps - 1; ++t) {
+		time(t + 1) = (t + 1) * dt;
+		for (int x = 1; x < N - 2; ++x) {
+			u(x, t + 1) = u(x, t) - dt * (std::max(a(x / dx), 0.0) * (u(x, t) - u(x - 1, t)) / dx - std::min(a(x / dx), 0.0) * (u(x + 1, t) - u(x, t)) / dx);
+		}
+		u(0, t + 1)     = u(N - 2, t + 1);
+		u(N - 1, t + 1) = u(1, t + 1);
+	}
 }
 
 /// Uses forward Euler and upwind finite differences to compute u from time 0 to time T
@@ -39,12 +50,13 @@ void SimpleUpwindFD(Eigen::MatrixXd &u, Vector &time, const Vector u0, double dt
 ///
 
 void UpwindFD(Eigen::MatrixXd &u, Vector &time, const Vector u0, double dt, double T, int N, const std::function<double(double)> &a) {
-	const unsigned int nsteps = round(T / dt);
-	const double       dx     = 1. / (N - 1);
-	u.resize(N, nsteps + 1);
-	time.resize(nsteps + 1);
+	//const unsigned int nsteps = round(T / dt);
+	//const double       dx     = 1. / (N - 1);
+	//u.resize(N, nsteps + 1);
+	//time.resize(nsteps + 1);
 
 	// (write your solution here)
+	SimpleUpwindFD(u, time, u0, dt, T, N, a);
 }
 
 ///
@@ -69,6 +81,13 @@ void CenteredFD(Eigen::MatrixXd &u, Vector &time, const Vector u0, double dt, do
 	u.col(0) << u0;
 	time[0] = 0;
 	// (write your solution here)
+	for (unsigned int t = 0; t < nsteps; ++t) {
+		for (int x = 1; x < N - 1; ++x) {
+			u(x, t + 1) = u(x, t) / dt - a(x / dx) * (u(x + 1, t) - u(x - 1, t)) / (2 * dx);
+		}
+		u(0, t + 1)     = u(N - 2, t + 1);
+		u(N - 1, t + 1) = u(1, t + 1);
+	}
 }
 
 /* Initial condition: rectangle */
