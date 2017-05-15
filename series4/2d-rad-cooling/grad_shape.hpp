@@ -1,5 +1,6 @@
 #pragma once
 #include <Eigen/Core>
+#include <tuple>
 
 //! The gradient of the shape function (on the reference element)
 //!
@@ -9,6 +10,8 @@
 //! @param x x coordinate in the reference element.
 //! @param y y coordinate in the reference element.
 inline Eigen::Vector2d gradientLambda(const int i, double x, double y) {
+	std::ignore = x;
+	std::ignore = y;
 	return Eigen::Vector2d(-1 + (i > 0) + (i == 1),
 	                       -1 + (i > 0) + (i == 2));
 }
