@@ -41,12 +41,41 @@ std::pair<Eigen::VectorXd, std::vector<double>> radiativeTimeEvolutionImplicit(c
 	// so they can be defined before the time loop. Also set up the solver
 	// (write your solution here)
 
-	Eigen::VectorXd k1(u0.rows());
-	Eigen::VectorXd k2(u0.rows());
+	SparseMatrix M = assembleMassMatrix(vertices, triangles);
+	SparseMatrix A = assembleStiffnessMatrix(vertices, triangles);
+	SparseMatrix B = assembleBoundaryMatrix(vertices, edges, gamma);
+	A += B;
+
+	Eigen::SimplicialLDLT<SparseMatrix> Solver;
+	Solver.compute(M + dt * lambda * A);
+
+	if (Solver.info() != Eigen::Success) {
+		throw std::runtime_error("Could not decompose matix for SDIRK");
+	}
+
+	auto solveY1 = [&](const Eigen::VectorXd &mu) -> Eigen::VectorXd {
+		return Solver.solve(M * mu);
+	};
+
+	auto solveY2 = [&](const Eigen::VectorXd &mu, const Eigen::VectorXd &Y1) -> Eigen::VectorXd {
+		return Solver.solve(M * mu - dt * (1-lambda) * A * Y1);
+	};
+
+	Eigen::SimplicialLDLT<SparseMatrix> SolverM;
+	SolverM.compute(M);
+
+	if (SolverM.info() != Eigen::Success) {
+		throw std::runtime_error("Could not decompose matrix M");
+	}
+
+	Eigen::VectorXd Y1(u0.rows());
+	Eigen::VectorXd Y2(u0.rows());
 	for (int timestep = 0; timestep < m; ++timestep) {
 		// Do one step forward in time
 		// (write your solution here)
-
+		Y1 = solveY1(u);
+		Y2 = solveY2(u, Y1);
+		u = SolverM.solve(M * u - dt * A * ( (1 - lambda) * Y1 + lambda * Y2)).eval();
 		// Compute the energy for this level
 		energy.push_back(u.sum() / u.rows());
 	}

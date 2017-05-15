@@ -20,7 +20,7 @@ SparseMatrix assembleBoundaryMatrix(
 	const int            numberOfElements = edges.rows();
 
 	// (write your solution here)
-	for (int i = 0; i < edges.size(); ++i) {
+	for (int i = 0; i < numberOfElements; ++i) {
 		auto indexSet = edges.row(i);
 
 		const auto &a = vertices.row(indexSet(0));

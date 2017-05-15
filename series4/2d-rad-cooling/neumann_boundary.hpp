@@ -21,7 +21,7 @@ void computeBoundaryMatrix(MatrixType & boundaryMatrix,
 				return lambda(i, (1 + t) / 2, 0) * lambda(j, (1 - t) / 2, 0);
 			};
 
-			boundaryMatrix(i, j) = integrate1d(f);
+			boundaryMatrix(i, j) = integrate1d(f) * gamma / (2 * (b-a).norm());
 		}
 	}
 }
