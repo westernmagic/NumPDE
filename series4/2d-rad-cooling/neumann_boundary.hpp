@@ -21,8 +21,8 @@ void computeBoundaryMatrix(MatrixType & boundaryMatrix,
 				return lambda(i, t / 2.0 + 1, 0) * lambda(j, t / 2.0 + 1, 0);
 			};
 
-			// TODO: why 1/2?
-			boundaryMatrix(i, j) = integrate1d(f) * gamma * (b - a).norm() / 2;
+			double scaling_factor = (b - a).norm() / 2.0;
+			boundaryMatrix(i, j) = scaling_factor * gamma * integrate1d(f);
 		}
 	}
 }
