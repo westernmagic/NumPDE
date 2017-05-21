@@ -49,9 +49,8 @@ void Godunov(int N, double T, const std::function<double(double)> &f, const std:
 		// Update dT according to current CFL condition
 		// (write your solution here)
 		// $\increment t = \frac{\increment x}{2 \max_j \abs{f'(U_j^n)}$
-		double dt = dx / (2 * X.unaryExpr([&df](double x) -> double {
-			                       using std::abs;
-			                       return abs(df(x));
+		double dt = dx / (2 * u.unaryExpr([&df](double x) -> double {
+			                       return std::abs(df(x));
 			                     }).maxCoeff());
 
 		// Update current time
