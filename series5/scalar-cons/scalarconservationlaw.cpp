@@ -93,9 +93,17 @@ void GodunovConvergence(double T, const std::function<double(double)> &f, const 
 	for (auto &N : resolutions) {
 		// find approximate solution using Godunov scheme
 		// (write your solution here)
+		Eigen::VectorXd u;
+		Eigen::VectorXd X;
+		Godunov(N, T, f, df, u0, u, X);
 
 		// compute errors and push them bach to the corresponfing error vectors
 		// (write your solution here)
+		Eigen::VectorXd errors = (u - X.unaryExpr([&uex, &T](double x) -> double {
+			return uex(x, T);
+		})).cwiseAbs();
+		L1_errors.emplace_back(errors.sum());
+		Linf_errors.emplace_back(errors.maxCoeff());
 	}
 
 	writeToFile(baseName + "_L1errors_Godunov.txt", L1_errors);
