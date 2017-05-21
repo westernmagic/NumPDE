@@ -37,9 +37,7 @@ void Godunov(int N, double T, const std::function<double(double)> &f, const std:
 
 	//setup vectors to store (old) solution
 	// (write your solution here)
-	u = X.unaryExpr([&u0](double x) -> double {
-		return u0(x);
-	});
+	u = X.unaryExpr(u0);
 	Eigen::VectorXd u_old{u};
 
 	// choose dt such that if obeys CFL condition
