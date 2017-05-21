@@ -1,9 +1,11 @@
 #include "writer.hpp"
 #include <Eigen/Core>
+#include <algorithm>
 #include <cmath>
 #include <functional>
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 
 //----------------GodunovBegin----------------
 /// @param[in] N the number of grid points, NOT INCLUDING BOUNDARY POINTS
@@ -16,33 +18,62 @@
 void Godunov(int N, double T, const std::function<double(double)> &f, const std::function<double(double)> &df, const std::function<double(double)> &u0, Eigen::VectorXd &u, Eigen::VectorXd &X) {
 	// Create space discretization for interval [-2,2]
 	// (write your solution here)
+	double dx = 1.0 / (N + 1);
+	u.resize(N + 2);
+	X.setLinSpaced(N + 2, -2, 2);
 
 	// The Godunov flux
 	// (write your solution here)
+	// $F_{j + \frac{1}{2}}^n = \max(f(max(U_j^n, \omega)), f(min(U_{j + 1}^n, \omega)))$
+	// where $\omega$ minimum of $f$
+	auto F = [&f](double a, double b) -> double {
+		using std::max;
+		using std::min;
+		// TODO: find minimum of f
+		double omega{0};
+		return max(f(max(a, omega)), f(min(b, omega)));
+	};
 
 	//setup vectors to store (old) solution
 	// (write your solution here)
+	u = X.unaryExpr([&u0](double x) -> double {
+		return u0(x);
+	});
+	Eigen::VectorXd u_old{u};
 
 	// choose dt such that if obeys CFL condition
 	// (write your solution here)
 	double t = 0;
 
 	//Please uncomment the next line:
-	// while( t <= T){
-	// Update dT according to current CFL condition
-	// (write your solution here)
+	while (t <= T) {
+		// Update dT according to current CFL condition
+		// (write your solution here)
+		// $\increment t = \frac{\increment x}{2 \max_j \abs{f'(U_j^n)}$
+		double dt = dx / (2 * X.unaryExpr([&df](double x) -> double {
+			                       using std::abs;
+			                       return abs(df(x));
+			                     }).maxCoeff());
 
-	// Update current time
-	// (write your solution here)
+		// Update current time
+		// (write your solution here)
+		t += dt;
 
-	// Update the internal values of u
-	// (write your solution here)
+		// Update the internal values of u
+		// (write your solution here)
+		// $U_j^{n + 1} = U_j^n - \frac{\increment t}{\increment x} \left( F_{j + \frac{1}{2}}^n - F_{j - \frac{1}{2}}^n \right)$
+		std::swap(u, u_old);
+		for (int i = 1; i < N + 1; ++i) {
+			u(i) = u_old(i) - dt / dx * (F(u_old(i), u_old(i + 1)) - F(u_old(i - 1), u_old(i)));
+		}
 
-	// Update boundary with non-reflecting Neumann bc
-	// (write your solution here)
+		// Update boundary with non-reflecting Neumann bc
+		// (write your solution here)
+		u(0)     = u(1);
+		u(N + 1) = u(N);
 
-	//Please uncomment the next line:
-	//}
+		//Please uncomment the next line:
+	}
 }
 //----------------GodunovEnd----------------
 
