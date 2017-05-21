@@ -100,8 +100,8 @@ void GodunovConvergence(double T, const std::function<double(double)> &f, const 
 		// compute errors and push them bach to the corresponfing error vectors
 		// (write your solution here)
 		Eigen::VectorXd errors = (u - X.unaryExpr([&uex, &T](double x) -> double {
-			return uex(x, T);
-		})).cwiseAbs();
+			                         return uex(x, T);
+			                       })).cwiseAbs();
 		L1_errors.emplace_back(errors.sum());
 		Linf_errors.emplace_back(errors.maxCoeff());
 	}
@@ -124,33 +124,48 @@ void LaxFriedrichs(int N, double T, const std::function<double(double)> &f, cons
 	// Create space discretization for interval [-2,2]
 	// (write your solution here)
 	double CFL = 0.5;
+	double dx  = 1.0 / (N + 1);
 
 	//setup vectors to store solution
 	// (write your solution here)
+	X.setLinSpaced(N + 2, -2, 2);
+	u = X.unaryExpr(u0);
+	Eigen::VectorXd u_old{u};
 
 	// choose dt such that if obeys CFL condition
 	// (write your solution here)
-	double t = 0;
+	double t  = 0;
+	double dt = CFL * dx;
 
 	// The Lax-Friedrichs flux
 	// (write your solution here)
+	auto F = [&](double a, double b) -> double {
+		return (f(a) + f(b)) / 2 - dx / (2 * dt) * (b - a);
+	};
 
 	//Please uncomment the next line:
-	//while( t <= T){
-	// Update dT according to current CFL condition
-	// (write your solution here)
+	while (t <= T) {
+		// Update dT according to current CFL condition
+		// (write your solution here)
 
-	// Update current time
-	// (write your solution here)
+		// Update current time
+		// (write your solution here)
+		t += dt;
 
-	// Update the internal values of u
-	// (write your solution here)
+		// Update the internal values of u
+		// (write your solution here)
+		std::swap(u, u_old);
+		for (int i = 1; i < N + 1; ++i) {
+			u(i) = u_old(i) - dt / dx * (F(u_old(i), u_old(i + 1)) - F(u_old(i - 1), u_old(i)));
+		}
 
-	// Update boundary with non-reflecting Neumann bc
-	// (write your solution here)
+		// Update boundary with non-reflecting Neumann bc
+		// (write your solution here)
+		u(0)     = u(1);
+		u(N + 1) = u(N);
 
-	//Please uncomment the next line:
-	//}
+		//Please uncomment the next line:
+	}
 }
 //----------------LFEnd----------------
 
