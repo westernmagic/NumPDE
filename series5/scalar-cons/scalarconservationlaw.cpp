@@ -185,9 +185,17 @@ void LFConvergence(double T, const std::function<double(double)> &f, const std::
 	for (auto &N : resolutions) {
 		// find approximate solution using Lax-Friedrichs scheme
 		// (write your solution here)
+		Eigen::VectorXd u;
+		Eigen::VectorXd X;
+		LaxFriedrichs(N, T, f, df, u0, u, X);
 
 		// compute errors and push them bach to the corresponfing error vectors
 		// (write your solution here)
+		Eigen::VectorXd errors = (u - X.unaryExpr([&](double x) -> double {
+			return uex(x, T);
+		})).cwiseAbs();
+		L1_errors.emplace_back(errors.sum());
+		Linf_errors.emplace_back(errors.maxCoeff());
 	}
 
 	writeToFile(baseName + "_L1errors_LF.txt", L1_errors);
