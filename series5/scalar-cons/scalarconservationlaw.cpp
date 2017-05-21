@@ -304,6 +304,21 @@ int main(int, char **) {
 	LaxFriedrichs(N, T, fBurgers, dfBurgers, U0i, u, X);
 	writeToFile("uBi_LF.txt", u);
 
+	Godunov(N, T, fBurgers, dfBurgers, U0ii, u, X);
+	writeToFile("uBii_G.txt", u);
+	LaxFriedrichs(N, T, fBurgers, dfBurgers, U0ii, u, X);
+	writeToFile("uBii_LF.txt", u);
+
+	Godunov(N, T, fBurgers, dfBurgers, U0iii, u, X);
+	writeToFile("uBiii_G.txt", u);
+	LaxFriedrichs(N, T, fBurgers, dfBurgers, U0iii, u, X);
+	writeToFile("uBiii_LF.txt", u);
+
+	Godunov(N, T, fBurgers, dfBurgers, U0iv, u, X);
+	writeToFile("uBiv_G.txt", u);
+	LaxFriedrichs(N, T, fBurgers, dfBurgers, U0iv, u, X);
+	writeToFile("uBiv_LF.txt", u);
+
 	// compute convergence for Burgers with initial data i
 	GodunovConvergence(T, fBurgers, dfBurgers, U0i, Uexi, "Burgers1");
 	LFConvergence(T, fBurgers, dfBurgers, U0i, Uexi, "Burgers1");
