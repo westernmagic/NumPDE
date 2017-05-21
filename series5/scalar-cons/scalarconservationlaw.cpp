@@ -5,8 +5,8 @@
 #include <functional>
 #include <iostream>
 #include <stdexcept>
-#include <utility>
 #include <tuple>
+#include <utility>
 
 //----------------GodunovBegin----------------
 /// @param[in] N the number of grid points, NOT INCLUDING BOUNDARY POINTS
@@ -191,8 +191,8 @@ void LFConvergence(double T, const std::function<double(double)> &f, const std::
 		// compute errors and push them bach to the corresponfing error vectors
 		// (write your solution here)
 		Eigen::VectorXd errors = (u - X.unaryExpr([&](double x) -> double {
-			return uex(x, T);
-		})).cwiseAbs();
+			                         return uex(x, T);
+			                       })).cwiseAbs();
 		L1_errors.emplace_back(errors.sum());
 		Linf_errors.emplace_back(errors.maxCoeff());
 	}
