@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <utility>
+#include <tuple>
 
 //----------------GodunovBegin----------------
 /// @param[in] N the number of grid points, NOT INCLUDING BOUNDARY POINTS
@@ -121,6 +122,7 @@ void GodunovConvergence(double T, const std::function<double(double)> &f, const 
 /// @param[out] u solution at time T
 /// @param[out] X Grid Points
 void LaxFriedrichs(int N, double T, const std::function<double(double)> &f, const std::function<double(double)> &df, const std::function<double(double)> &u0, Eigen::VectorXd &u, Eigen::VectorXd &X) {
+	std::ignore = df;
 	// Create space discretization for interval [-2,2]
 	// (write your solution here)
 	double CFL = 0.5;
