@@ -8,6 +8,11 @@
 #include <tuple>
 #include <utility>
 
+// Simpson integrator
+inline double integrate(std::function<double(double)> f, double a, double b) {
+	return (b-a) / 6 * (f(a) + 4 * f((a + b) / 2) + f(b));
+}
+
 //----------------GodunovBegin----------------
 /// @param[in] N the number of grid points, NOT INCLUDING BOUNDARY POINTS
 /// @param[in] T the final time at which to compute the solution
@@ -19,7 +24,7 @@
 void Godunov(int N, double T, const std::function<double(double)> &f, const std::function<double(double)> &df, const std::function<double(double)> &u0, Eigen::VectorXd &u, Eigen::VectorXd &X) {
 	// Create space discretization for interval [-2,2]
 	// (write your solution here)
-	u.resize(N + 2);
+	u.resize(N + 1);
 	X.setLinSpaced(N + 2, -2, 2);
 	double dx = (X.maxCoeff() - X.minCoeff()) / (N + 1);
 
@@ -37,7 +42,9 @@ void Godunov(int N, double T, const std::function<double(double)> &f, const std:
 
 	//setup vectors to store (old) solution
 	// (write your solution here)
-	u = X.unaryExpr(u0);
+	for (int i = 0; i < N + 1; ++i) {
+		u(i) = 1 / dx * integrate(u0, X(i), X(i + 1));
+	}
 	Eigen::VectorXd u_old{u};
 
 	// choose dt such that if obeys CFL condition
@@ -61,14 +68,14 @@ void Godunov(int N, double T, const std::function<double(double)> &f, const std:
 		// (write your solution here)
 		// $U_j^{n + 1} = U_j^n - \frac{\increment t}{\increment x} \left( F_{j + \frac{1}{2}}^n - F_{j - \frac{1}{2}}^n \right)$
 		std::swap(u, u_old);
-		for (int i = 1; i < N + 1; ++i) {
+		for (int i = 1; i < N; ++i) {
 			u(i) = u_old(i) - dt / dx * (F(u_old(i), u_old(i + 1)) - F(u_old(i - 1), u_old(i)));
 		}
 
 		// Update boundary with non-reflecting Neumann bc
 		// (write your solution here)
-		u(0)     = u(1);
-		u(N + 1) = u(N);
+		u(0) = u(1);
+		u(N) = u(N - 1);
 
 		//Please uncomment the next line:
 	}
@@ -128,8 +135,10 @@ void LaxFriedrichs(int N, double T, const std::function<double(double)> &f, cons
 
 	//setup vectors to store solution
 	// (write your solution here)
-	X.setLinSpaced(N + 2, -2, 2);
-	u = X.unaryExpr(u0);
+	u.resize(N + 1);
+	for (int i = 0; i < N + 1; ++i) {
+		u(i) = 1 / dx * integrate(u0, X(i), X(i + 1));
+	}
 	Eigen::VectorXd u_old{u};
 
 	// choose dt such that if obeys CFL condition
@@ -158,14 +167,14 @@ void LaxFriedrichs(int N, double T, const std::function<double(double)> &f, cons
 		// Update the internal values of u
 		// (write your solution here)
 		std::swap(u, u_old);
-		for (int i = 1; i < N + 1; ++i) {
+		for (int i = 1; i < N; ++i) {
 			u(i) = u_old(i) - dt / dx * (F(u_old(i), u_old(i + 1)) - F(u_old(i - 1), u_old(i)));
 		}
 
 		// Update boundary with non-reflecting Neumann bc
 		// (write your solution here)
-		u(0)     = u(1);
-		u(N + 1) = u(N);
+		u(0) = u(1);
+		u(N) = u(N - 1);
 
 		//Please uncomment the next line:
 	}
