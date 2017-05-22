@@ -19,9 +19,9 @@
 void Godunov(int N, double T, const std::function<double(double)> &f, const std::function<double(double)> &df, const std::function<double(double)> &u0, Eigen::VectorXd &u, Eigen::VectorXd &X) {
 	// Create space discretization for interval [-2,2]
 	// (write your solution here)
-	double dx = 4.0 / (N + 1);
 	u.resize(N + 2);
 	X.setLinSpaced(N + 2, -2, 2);
+	double dx = (X.maxCoeff() - X.minCoeff()) / (N + 1);
 
 	// The Godunov flux
 	// (write your solution here)
@@ -123,7 +123,8 @@ void LaxFriedrichs(int N, double T, const std::function<double(double)> &f, cons
 	// Create space discretization for interval [-2,2]
 	// (write your solution here)
 	double CFL = 0.5;
-	double dx  = 4.0 / (N + 1);
+	X.setLinSpaced(N + 2, -2, 2);
+	double dx  = (X.maxCoeff() - X.minCoeff()) / (N + 1);
 
 	//setup vectors to store solution
 	// (write your solution here)
