@@ -135,7 +135,7 @@ void LaxFriedrichs(int N, double T, const std::function<double(double)> &f, cons
 	// choose dt such that if obeys CFL condition
 	// (write your solution here)
 	double t  = 0;
-	double dt = CFL * dx;
+	double dt;
 
 	// The Lax-Friedrichs flux
 	// (write your solution here)
@@ -147,6 +147,9 @@ void LaxFriedrichs(int N, double T, const std::function<double(double)> &f, cons
 	while (t <= T) {
 		// Update dT according to current CFL condition
 		// (write your solution here)
+		dt = CFL * dx / u.unaryExpr([&df](double x) -> double {
+			                       return std::abs(df(x));
+			                     }).maxCoeff();
 
 		// Update current time
 		// (write your solution here)
