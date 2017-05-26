@@ -52,13 +52,13 @@ void Godunov(int N, double T, const std::function<double(double)> &f, const std:
 	double t = 0;
 
 	//Please uncomment the next line:
-	while (t <= T) {
+	while (t < T) {
 		// Update dT according to current CFL condition
 		// (write your solution here)
 		// $\increment t = \frac{\increment x}{2 \max_j \abs{f'(U_j^n)}$
-		double dt = dx / (2 * u.unaryExpr([&df](double x) -> double {
+		double dt = std::min(T - t, dx / (2 * u.unaryExpr([&df](double x) -> double {
 			                       return std::abs(df(x));
-			                     }).maxCoeff());
+			                     }).maxCoeff()));
 
 		// Update current time
 		// (write your solution here)
@@ -104,9 +104,12 @@ void GodunovConvergence(double T, const std::function<double(double)> &f, const 
 
 		// compute errors and push them bach to the corresponfing error vectors
 		// (write your solution here)
-		Eigen::VectorXd errors = (u - X.unaryExpr([&uex, &T](double x) -> double {
-			                         return uex(x, T);
-			                       })).cwiseAbs();
+		Eigen::VectorXd errors;
+		errors.resize(u.size());
+		for (int i = 0; i < N + 1; ++i) {
+			double dx = X(i + 1) - X(i);
+			errors(i) = dx * std::abs(u(i) - 1.0 / dx * integrate([&](double x) -> double {return uex(x, T);}, X(i), X(i + 1)));
+		}
 		L1_errors.emplace_back(errors.sum());
 		Linf_errors.emplace_back(errors.maxCoeff());
 	}
@@ -153,12 +156,12 @@ void LaxFriedrichs(int N, double T, const std::function<double(double)> &f, cons
 	};
 
 	//Please uncomment the next line:
-	while (t <= T) {
+	while (t < T) {
 		// Update dT according to current CFL condition
 		// (write your solution here)
-		dt = CFL * dx / u.unaryExpr([&df](double x) -> double {
+		dt = std::min(T - t, CFL * dx / u.unaryExpr([&df](double x) -> double {
 			                       return std::abs(df(x));
-			                     }).maxCoeff();
+			                     }).maxCoeff());
 
 		// Update current time
 		// (write your solution here)
@@ -203,9 +206,12 @@ void LFConvergence(double T, const std::function<double(double)> &f, const std::
 
 		// compute errors and push them bach to the corresponfing error vectors
 		// (write your solution here)
-		Eigen::VectorXd errors = (u - X.unaryExpr([&](double x) -> double {
-			                         return uex(x, T);
-			                       })).cwiseAbs();
+		Eigen::VectorXd errors;
+		errors.resize(u.size());
+		for (int i = 0; i < N + 1; ++i) {
+			double dx = X(i + 1) - X(i);
+			errors(i) = dx * std::abs(u(i) - 1.0 / dx * integrate([&](double x) -> double {return uex(x, T);}, X(i), X(i + 1)));
+		}
 		L1_errors.emplace_back(errors.sum());
 		Linf_errors.emplace_back(errors.maxCoeff());
 	}
@@ -307,7 +313,7 @@ double U0BL(double x) {
 
 int main(int, char **) {
 	double T = 0.8;
-	int    N = 100;
+	int    N = 400;
 
 	Eigen::VectorXd u, X;
 	// Test for Burgers with initiald data i
