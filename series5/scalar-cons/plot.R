@@ -56,9 +56,12 @@ bind_rows(
 	read_solution("series5/build/uBL", . %>% {NA})       %>% mutate(InitialConditions = "Buckley-Leverett")
 ) %>%
 	gather(Type, u, -x, -InitialConditions) %>%
-	ggplot(aes(x = x, y = u, color = Type)) +
-	facet_wrap(~InitialConditions, scales = "free") +
-	geom_line()
+	filter(!is.na(u)) %>% {
+		ggplot(., aes(x = x, y = u, color = Type)) +
+			facet_wrap(~InitialConditions, scales = "free") +
+			geom_line(data = filter(., Type == "Exact")) +
+			geom_step(data = filter(., Type != "Exact"))
+	}
 
 error_data <- lapply(1:4, function(i) {
 	path <- "series5/build/Burgers"
