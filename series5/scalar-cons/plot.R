@@ -82,16 +82,17 @@ error_data <- lapply(1:4, function(i) {
 	) %>%
 	select(-Type)
 
-error_data %>%
-	ggplot(aes(x = Resolutions, y = Error)) +
-	coord_trans("log10", "log10") +
-	facet_grid(InitialConditions ~ Method) +
-	geom_line(aes(color = Error_Type))
-
-error_data %>%
+error_orders <- error_data %>%
 	group_by(InitialConditions, Method, Error_Type) %>%
 	do(lm = lm(log(Error) ~ log(Resolutions), data = .)) %>%
 	mutate(Order = summary(lm)$coeff[2]) %>%
 	select(-lm)
+
+error_data %>%
+	ggplot(aes(x = Resolutions, y = Error, color = Error_Type)) +
+	coord_trans("log10", "log10") +
+	facet_grid(InitialConditions ~ Method) +
+	geom_line() +
+	geom_text(data = error_orders, aes(label = Order %>% round(2) %>% format(2), vjust = if_else(Error_Type == "Linf", -1, 0)), x = 0, y = 0, hjust = 0)
 
 
