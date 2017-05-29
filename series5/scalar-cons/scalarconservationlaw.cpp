@@ -104,14 +104,16 @@ void GodunovConvergence(double T, const std::function<double(double)> &f, const 
 
 		// compute errors and push them bach to the corresponfing error vectors
 		// (write your solution here)
-		Eigen::VectorXd errors;
-		errors.resize(u.size());
+		double L1_error{0};
+		double Linf_error{0};
 		for (int i = 0; i < N + 1; ++i) {
 			double dx = X(i + 1) - X(i);
-			errors(i) = dx * std::abs(u(i) - 1.0 / dx * integrate([&](double x) -> double {return uex(x, T);}, X(i), X(i + 1)));
+			double error = std::abs(u(i) - 1.0 / dx * integrate([&](double x) -> double {return uex(x, T);}, X(i), X(i + 1)));
+			L1_error += dx * error;
+			Linf_error = std::max(Linf_error, error);
 		}
-		L1_errors.emplace_back(errors.sum());
-		Linf_errors.emplace_back(errors.maxCoeff());
+		L1_errors.emplace_back(L1_error);
+		Linf_errors.emplace_back(Linf_error);
 	}
 
 	writeToFile(baseName + "_L1errors_Godunov.txt", L1_errors);
@@ -206,14 +208,16 @@ void LFConvergence(double T, const std::function<double(double)> &f, const std::
 
 		// compute errors and push them bach to the corresponfing error vectors
 		// (write your solution here)
-		Eigen::VectorXd errors;
-		errors.resize(u.size());
+		double L1_error{0};
+		double Linf_error{0};
 		for (int i = 0; i < N + 1; ++i) {
 			double dx = X(i + 1) - X(i);
-			errors(i) = dx * std::abs(u(i) - 1.0 / dx * integrate([&](double x) -> double {return uex(x, T);}, X(i), X(i + 1)));
+			double error = std::abs(u(i) - 1.0 / dx * integrate([&](double x) -> double {return uex(x, T);}, X(i), X(i + 1)));
+			L1_error += dx * error;
+			Linf_error = std::max(Linf_error, error);
 		}
-		L1_errors.emplace_back(errors.sum());
-		Linf_errors.emplace_back(errors.maxCoeff());
+		L1_errors.emplace_back(L1_error);
+		Linf_errors.emplace_back(Linf_error);
 	}
 
 	writeToFile(baseName + "_L1errors_LF.txt", L1_errors);
